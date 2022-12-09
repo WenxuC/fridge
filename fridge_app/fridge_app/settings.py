@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.apps.ApiConfig',
     'accounts.apps.AccountsConfig',
+    'frontend.apps.FrontendConfig'
 
 ]
 

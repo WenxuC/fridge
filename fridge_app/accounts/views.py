@@ -52,5 +52,3 @@ class LoginView(APIView):
                     messages.error(request, 'Invalid Credentials')
                     return Response({'message:': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message:':'Login Unsuccessfully'}, status=status.HTTP_400_BAD_REQUEST)
-
-
