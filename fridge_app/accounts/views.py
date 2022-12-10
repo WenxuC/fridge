@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages, auth
 from .models import Account
 from .serializer import AccountSerializer, LoginSerializer
 from rest_framework import generics, status
@@ -37,6 +36,9 @@ class RegisterView(APIView):
 class LoginView(APIView):
     serializer_class = LoginSerializer
     def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             
@@ -46,9 +48,7 @@ class LoginView(APIView):
             if user_name is not None and password is not None:
                 user = Account.objects.filter(user_name=user_name, password=password)
                 if user.exists():
-                    messages.success(request, 'You are now logged in')
-                    return Response({'message:': 'Login Successfully'}, status=status.HTTP_202_ACCEPTED)
+                    return Response({'message:': 'Login Successfully'}, status=status.HTTP_200_OK)
                 else:
-                    messages.error(request, 'Invalid Credentials')
                     return Response({'message:': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message:':'Login Unsuccessfully'}, status=status.HTTP_400_BAD_REQUEST)
