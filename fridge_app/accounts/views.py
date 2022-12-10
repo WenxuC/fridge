@@ -13,7 +13,11 @@ class RegisterView(APIView):
     serializer_class = AccountSerializer
     
     def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
         serializer = self.serializer_class(data=request.data)
+
         if serializer.is_valid():
             first_name = serializer.data.get('first_name')
             last_name = serializer.data.get('last_name')
@@ -22,15 +26,12 @@ class RegisterView(APIView):
             password = serializer.data.get('password')
 
             if Account.objects.filter(email=email).exists():
-                messages.error(request, "Email is already taken")
-                return redirect('register')
+                return Response({'message:': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
             
             if Account.objects.filter(user_name=user_name).exists():
-                messages.error(request, "User name is already taken")
-                return redirect('register')
+                return Response({'message:': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 account = Account(first_name=first_name, last_name=last_name, user_name=user_name, email=email, password=password)
-                account.save()
                 return Response(AccountSerializer(account).data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
@@ -48,7 +49,8 @@ class LoginView(APIView):
             if user_name is not None and password is not None:
                 user = Account.objects.filter(user_name=user_name, password=password)
                 if user.exists():
-                    return Response({'message:': 'Login Successfully'}, status=status.HTTP_200_OK)
+                    session_key = self.request.session.session_key
+                    return Response(session_key, status=status.HTTP_200_OK)
                 else:
                     return Response({'message:': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message:':'Login Unsuccessfully'}, status=status.HTTP_400_BAD_REQUEST)
