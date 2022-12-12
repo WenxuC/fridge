@@ -3,11 +3,16 @@ import { Button, Grid, TextField, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-export default function Login() {
+
+export default function Register() {
 	const navigate = useNavigate();
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [first_name, getFirstName] = useState('');
+	const [last_name, getLastName] = useState('');
+	const [username, getUserName] = useState('');
+	const [password, getPassword] = useState('');
+	const [email, getEmail] = useState('');
 	const [error, getError] = useState('');
+
 	useEffect(() => {
 		setTimeout(() => {
 			getError('');
@@ -16,22 +21,23 @@ export default function Login() {
 
 	const handleSubmit = () => {
 		const body = {
+			first_name: first_name,
+			last_name: last_name,
 			user_name: username,
 			password: password,
+			email: email,
 		};
 		axios
-			.post('http://localhost:8000/account/login', body)
+			.post('http://localhost:8000/account/register', body)
 			.catch(function (error) {
 				if (error.response.status == 400) {
-					return getError('Wrong password or user');
+					return getError('User or Email already exists');
 					// Show the error on the frontend
 				}
 			})
 			.then(response => {
-				if (response.statusText) {
+				if (response.status == 201) {
 					navigate('/dashboard');
-				} else {
-					console.log(response.statusText);
 				}
 			});
 	};
@@ -40,25 +46,53 @@ export default function Login() {
 		<Grid container spacing={1} align='center'>
 			<Grid item xs={12}>
 				<Typography variant='h4' component='h4'>
-					Login
+					Register
 				</Typography>
 			</Grid>
-			<Grid item xs={3}>
-				{error != '' ? (
-					<Alert severity='error' align='center'>
-						{error}
-					</Alert>
-				) : null}
+			<Grid item xs={12}>
+				{error != '' ? <Alert severity='error'>{error}</Alert> : null}
 			</Grid>
-
 			<Grid item xs={12}>
 				<TextField
 					margin='normal'
 					required
-					label='Username'
+					label='First Name'
+					placeholder='First Name'
+					value={first_name}
+					onChange={e => getFirstName(e.target.value)}
+					autoFocus
+				/>
+			</Grid>
+			<Grid item xs={12}>
+				<TextField
+					margin='normal'
+					required
+					label='Last Name'
+					placeholder='Last Name'
+					value={last_name}
+					onChange={e => getLastName(e.target.value)}
+					autoFocus
+				/>
+			</Grid>
+			<Grid item xs={12}>
+				<TextField
+					margin='normal'
+					required
+					label='User Name'
 					placeholder='User Name'
 					value={username}
-					onChange={e => setUsername(e.target.value)}
+					onChange={e => getUserName(e.target.value)}
+					autoFocus
+				/>
+			</Grid>
+			<Grid item xs={12}>
+				<TextField
+					margin='normal'
+					required
+					label='Email'
+					placeholder='Email'
+					value={email}
+					onChange={e => getEmail(e.target.value)}
 					autoFocus
 				/>
 			</Grid>
@@ -68,7 +102,7 @@ export default function Login() {
 					required
 					label='Password'
 					value={password}
-					onChange={e => setPassword(e.target.value)}
+					onChange={e => getPassword(e.target.value)}
 					type='password'
 					placeholder='Password'
 				/>
