@@ -33,5 +33,4 @@ class RegisterView(generics.GenericAPIView):
             serializer.validated_data['password'] = make_password(password)
             user = serializer.save()
             return Response(RegisterSerializer(user).data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response('message: ', status=status.HTTP_400_BAD_REQUEST)

@@ -28,8 +28,7 @@ export default function Register() {
 			.catch(function (error) {
 				console.log('error', error.response);
 				if (error.response.status == 400) {
-					console.log(error);
-					return getError(error);
+					return getError(error.response.status);
 				}
 			})
 			.then(response => {
