@@ -1,40 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import AuthContext from '../context/AuthContext';
+
 export default function Login() {
 	const navigate = useNavigate();
+	const { loginUser } = useContext(AuthContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, getError] = useState('');
-	useEffect(() => {
-		setTimeout(() => {
-			getError('');
-		}, 5000);
-	}, []);
-
-	const handleSubmit = () => {
-		const body = {
-			user_name: username,
-			password: password,
-		};
-		axios
-			.post('http://localhost:8000/account/login', body)
-			.catch(function (error) {
-				if (error.response.status == 400) {
-					return getError('Wrong password or user');
-					// Show the error on the frontend
-				}
-			})
-			.then(response => {
-				if (response.statusText) {
-					navigate('/dashboard');
-				} else {
-					console.log(response.statusText);
-				}
-			});
-	};
 
 	return (
 		<Grid container spacing={1} align='center'>
@@ -76,10 +51,10 @@ export default function Login() {
 			<Grid item xs={12}>
 				<Button
 					type='submit'
-					value='Login'
+					value={[username, password]}
 					variant='contained'
 					sx={{ mt: 3, mb: 2 }}
-					onClick={handleSubmit}
+					onClick={loginUser}
 				>
 					Sign In
 				</Button>
