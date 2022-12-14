@@ -53,3 +53,4 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+fridge_app/db.sqlite3
