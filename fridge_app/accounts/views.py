@@ -1,56 +1,37 @@
-from django.shortcuts import render, redirect
-from .models import Account
-from .serializer import AccountSerializer, LoginSerializer
+from .models import User
+from .serializer import UserSerializer, RegisterSerializer
 from rest_framework import generics, status
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.contrib.auth.hashers import make_password
+
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 # Create your views here.
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 class AccountView(generics.ListAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-class RegisterView(APIView):
-    serializer_class = AccountSerializer
-    
-    def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-
-        serializer = self.serializer_class(data=request.data)
-
-        if serializer.is_valid():
-            first_name = serializer.data.get('first_name')
-            last_name = serializer.data.get('last_name')
-            user_name = serializer.data.get('user_name')
-            email = serializer.data.get('email')
-            password = serializer.data.get('password')
-
-            if Account.objects.filter(email=email).exists():
-                return Response({'message:': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            if Account.objects.filter(user_name=user_name).exists():
-                return Response({'message:': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                account = Account(first_name=first_name, last_name=last_name, user_name=user_name, email=email, password=password)
-                return Response(AccountSerializer(account).data, status=status.HTTP_201_CREATED)
-
-class LoginView(APIView):
-    serializer_class = LoginSerializer
-    def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
+class RegisterView(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
         
-        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            
-            user_name = serializer.data.get('user_name')
-            password = serializer.data.get('password')
-            
-            if user_name is not None and password is not None:
-                user = Account.objects.filter(user_name=user_name, password=password)
-                if user.exists():
-                    session_key = self.request.session.session_key
-                    return Response(session_key, status=status.HTTP_200_OK)
-                else:
-                    return Response({'message:': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'message:':'Login Unsuccessfully'}, status=status.HTTP_400_BAD_REQUEST)
+            password = serializer.validated_data.get('password')
+            serializer.validated_data['password'] = make_password(password)
+            user = serializer.save()
+            return Response(RegisterSerializer(user).data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response('message: ', status=status.HTTP_400_BAD_REQUEST)

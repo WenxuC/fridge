@@ -6,8 +6,6 @@ import axios from 'axios';
 
 export default function Register() {
 	const navigate = useNavigate();
-	const [first_name, getFirstName] = useState('');
-	const [last_name, getLastName] = useState('');
 	const [username, getUserName] = useState('');
 	const [password, getPassword] = useState('');
 	const [email, getEmail] = useState('');
@@ -21,23 +19,22 @@ export default function Register() {
 
 	const handleSubmit = () => {
 		const body = {
-			first_name: first_name,
-			last_name: last_name,
-			user_name: username,
+			username: username,
 			password: password,
 			email: email,
 		};
 		axios
-			.post('http://localhost:8000/account/register', body)
+			.post('http://127.0.0.1:8000/account/register', body)
 			.catch(function (error) {
+				console.log('error', error.response);
 				if (error.response.status == 400) {
-					return getError('User or Email already exists');
-					// Show the error on the frontend
+					console.log(error);
+					return getError(error);
 				}
 			})
 			.then(response => {
 				if (response.status == 201) {
-					navigate('/dashboard');
+					navigate('/login');
 				}
 			});
 	};
@@ -52,28 +49,7 @@ export default function Register() {
 			<Grid item xs={12}>
 				{error != '' ? <Alert severity='error'>{error}</Alert> : null}
 			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					margin='normal'
-					required
-					label='First Name'
-					placeholder='First Name'
-					value={first_name}
-					onChange={e => getFirstName(e.target.value)}
-					autoFocus
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					margin='normal'
-					required
-					label='Last Name'
-					placeholder='Last Name'
-					value={last_name}
-					onChange={e => getLastName(e.target.value)}
-					autoFocus
-				/>
-			</Grid>
+
 			<Grid item xs={12}>
 				<TextField
 					margin='normal'
