@@ -44,30 +44,6 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const registerUser = async e => {
-		e.preventDefault();
-		const value = e.target.value.split(',');
-		const response = await fetch('http://127.0.0.1:8000/account/token/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				username: value[0],
-				password: value[1],
-			}),
-		});
-		const data = await response.json();
-		if (response.status === 200) {
-			setUser(jwt_decode(data.access));
-			setAuthTokens(data);
-			localStorage.setItem('authTokens', JSON.stringify(data));
-			navigate('/dashboard');
-		} else {
-			alert('Somethign went wrong!');
-		}
-	};
-
 	const logoutUser = () => {
 		setAuthTokens(null);
 		setUser(null);

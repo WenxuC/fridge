@@ -27,12 +27,12 @@ export default function Register() {
 			.post('http://127.0.0.1:8000/account/register', body)
 			.catch(function (error) {
 				console.log('error', error.response);
-				if (error.response.status == 400) {
+				if (error.response.status === 400) {
 					return getError(error.response.status);
 				}
 			})
 			.then(response => {
-				if (response.status == 201) {
+				if (response.status === 201) {
 					navigate('/login');
 				}
 			});
@@ -46,7 +46,7 @@ export default function Register() {
 				</Typography>
 			</Grid>
 			<Grid item xs={12}>
-				{error != '' ? <Alert severity='error'>{error}</Alert> : null}
+				{error !== '' ? <Alert severity='error'>{error}</Alert> : null}
 			</Grid>
 
 			<Grid item xs={12}>

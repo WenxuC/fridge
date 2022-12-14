@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import AuthContext from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
-	const navigate = useNavigate();
 	let { user, logoutUser } = useContext(AuthContext);
 	return (
 		<Grid container spacing={1} align='center'>
