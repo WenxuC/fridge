@@ -1,15 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Button, Grid, TextField, Typography } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 export default function Login() {
-	const navigate = useNavigate();
 	const { loginUser } = useContext(AuthContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, getError] = useState('');
 
 	return (
 		<Grid container spacing={1} align='center'>
@@ -18,14 +14,6 @@ export default function Login() {
 					Login
 				</Typography>
 			</Grid>
-			<Grid item xs={3}>
-				{error != '' ? (
-					<Alert severity='error' align='center'>
-						{error}
-					</Alert>
-				) : null}
-			</Grid>
-
 			<Grid item xs={12}>
 				<TextField
 					margin='normal'
