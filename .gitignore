@@ -54,3 +54,4 @@ share/python-wheels/
 *.egg
 MANIFEST
 fridge_app/db.sqlite3
+fridge_app/db.sqlite3
