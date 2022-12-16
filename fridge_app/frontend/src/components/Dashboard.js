@@ -2,14 +2,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import AuthContext from '../context/AuthContext';
-
+import Item from './Item';
 export default function Dashboard() {
 	const { user, logoutUser, authTokens } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
 
 	useEffect(() => {
 		getItems();
-	}, []);
+	}, [setItems]);
 
 	const getItems = async () => {
 		const response = await fetch('http://127.0.0.1:8000/items/getItems', {
@@ -45,11 +45,15 @@ export default function Dashboard() {
 				</Button>
 			</Grid>
 			<Grid item xs={12}>
+				<Typography>---Pantry---</Typography>
 				{items.map(item => (
 					<List key={item.id}>
 						{item.name} - {item.quantity}
 					</List>
 				))}
+			</Grid>
+			<Grid item xs={12}>
+				<Item />
 			</Grid>
 		</Grid>
 	);

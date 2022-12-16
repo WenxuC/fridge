@@ -20,8 +20,7 @@ class CreateItemView(APIView):
             quantity = serializer.data.get('quantity')
             name = serializer.data.get('name')
             expiration = serializer.data.get('expiration')
-            id = serializer.data.get('user')
-            user = User.objects.get(id=id)
+            user = request.user
             item = Items(quantity=quantity, name=name, expiration=expiration, user=user)
             item.save()
             return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
