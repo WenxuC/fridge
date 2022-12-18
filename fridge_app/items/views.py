@@ -26,7 +26,6 @@ class CreateItemView(APIView):
             return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class GetItemView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ItemSerializer
@@ -36,17 +35,33 @@ class GetItemView(APIView):
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
             
+class UpdateItemView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+    def put(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            quantity = serializer.data.get('quantity')
+            name = serializer.data.get('name')
+            expiration = serializer.data.get('expiration')
 
-# class UpdateItemView(APIView):
-#     serializer_class = ItemSerializer
-#     def put(self, request, format=None):
-#         serializer = self.serializer_class(data=request.data)
-#         if serializer.is_valid():
-#             quantity = serializer.data.get('quantity')
-#             name = serializer.data.get('name')
-#             expiration = serializer.data.get('expiration')
-#             #queryset = Items.objects.filter()
-#             item = Items(quantity=quantity, name=name, expiration=expiration)
-#             item.save()
-# class DeleteItemView(APIView):
-#     pass
+            queryset = Items.objects.filter(name=name)
+            if queryset.exists():
+                item = queryset[0]
+                item.quantity = quantity
+                item.expiration = expiration
+                item.name = name
+                item.save(update_fields=['quantity', 'name', 'expiration'])
+                return Response(ItemSerializer(item).data, status=status.HTTP_200_OK)
+            return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)
+class DeleteItemView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+    def post(self, request, format=None):
+        id = request.data.get('id')
+        item_result = Items.objects.filter(id=id)
+        if item_result.exists():
+            item_result[0].delete()
+            return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
+        return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)
