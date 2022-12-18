@@ -1,33 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
-import List from '@mui/material/List';
 import AuthContext from '../context/AuthContext';
 import Item from './Item';
 export default function Dashboard() {
-	const { user, logoutUser, authTokens } = useContext(AuthContext);
-	const [items, setItems] = useState([]);
+	const { user, logoutUser } = useContext(AuthContext);
 
-	useEffect(() => {
-		getItems();
-	}, [setItems]);
-
-	const getItems = async () => {
-		const response = await fetch('http://127.0.0.1:8000/items/getItems', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + String(authTokens.access),
-			},
-		});
-
-		const data = await response.json();
-
-		if (response.status === 200) {
-			setItems(data);
-		} else if (response.statusText === 'Unauthorized') {
-			logoutUser();
-		}
-	};
 	return (
 		<Grid container spacing={1} align='center'>
 			<Grid item xs={12}>
@@ -43,14 +20,6 @@ export default function Dashboard() {
 				>
 					Logout
 				</Button>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography>---Pantry---</Typography>
-				{items.map(item => (
-					<List key={item.id}>
-						{item.name} - {item.quantity}
-					</List>
-				))}
 			</Grid>
 			<Grid item xs={12}>
 				<Item />
