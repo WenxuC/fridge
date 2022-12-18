@@ -52,13 +52,16 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	const updateToken = async () => {
-		const response = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ refresh: authTokens?.refresh }),
-		});
+		const response = await fetch(
+			'http://127.0.0.1:8000/account/token/refresh/',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ refresh: authTokens?.refresh }),
+			}
+		);
 
 		const data = await response.json();
 
