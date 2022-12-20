@@ -55,3 +55,4 @@ share/python-wheels/
 MANIFEST
 fridge_app/db.sqlite3
 fridge_app/db.sqlite3
+fridge_app/api/credentials.py
