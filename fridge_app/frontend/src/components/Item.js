@@ -11,19 +11,17 @@ import {
 	Dialog,
 	DialogTitle,
 	DialogContent,
-	DialogContentText,
 	DialogActions,
 } from '@mui/material';
-export default function Item() {
+export default function Item({ setItems, items }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [quantity, setQuantity] = useState('');
 	const [name, setName] = useState('');
 	const [expiration, setExpiration] = useState('');
 	const [weight, setWeight] = useState('lb');
-	const [items, setItems] = useState([]);
 	const [updateList, setUpdateList] = useState(false);
 	const [edit, setEdit] = useState(false);
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 	const weights = [
 		{
 			value: 'lbs',
@@ -93,25 +91,25 @@ export default function Item() {
 			logoutUser();
 		}
 	};
-	const handleEdit = async e => {
-		const id = e.target.value;
-		const response = await fetch('http://127.0.0.1:8000/items/updateItem', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + String(authTokens.access),
-			},
-			body: JSON.stringify({
-				id: id,
-			}),
-		});
+	// const handleEdit = async e => {
+	// 	const id = e.target.value;
+	// 	const response = await fetch('http://127.0.0.1:8000/items/updateItem', {
+	// 		method: 'PUT',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 			Authorization: 'Bearer ' + String(authTokens.access),
+	// 		},
+	// 		body: JSON.stringify({
+	// 			id: id,
+	// 		}),
+	// 	});
 
-		if (response.status === 200) {
-			setUpdateList(true);
-		} else if (response.statusText === 'Unauthorized') {
-			logoutUser();
-		}
-	};
+	// 	if (response.status === 200) {
+	// 		setUpdateList(true);
+	// 	} else if (response.statusText === 'Unauthorized') {
+	// 		logoutUser();
+	// 	}
+	// };
 	const updateEdit = () => {
 		if (edit) {
 			setEdit(false);
