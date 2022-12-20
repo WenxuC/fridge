@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import main
+from .views import GetRecipeView
 
 urlpatterns = [
-    path('', main)
+    path('getRecipe', GetRecipeView.as_view())
 ]
