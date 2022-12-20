@@ -17,11 +17,9 @@ class CreateItemView(APIView):
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            quantity = serializer.data.get('quantity')
             name = serializer.data.get('name')
-            expiration = serializer.data.get('expiration')
             user = request.user
-            item = Items(quantity=quantity, name=name, expiration=expiration, user=user)
+            item = Items(name=name, user=user)
             item.save()
             return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
@@ -40,19 +38,17 @@ class UpdateItemView(APIView):
     serializer_class = ItemSerializer
     def put(self, request, format=None):
         if serializer.is_valid():
-            quantity = serializer.data.get('quantity')
             name = serializer.data.get('name')
-            expiration = serializer.data.get('expiration')
 
             id = request.data.get('id')
             item_result = Items.objects.filter(id=id)
             serializer = self.serializer_class(data=request.data)
             if item_result.exists():
                 item = item_result[0]
-                item.quantity = quantity
-                item.expiration = expiration
+
+
                 item.name = name
-                item.save(update_fields=['quantity', 'name', 'expiration'])
+                item.save(update_fields=['name'])
                 return Response(ItemSerializer(item).data, status=status.HTTP_200_OK)  
             return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)

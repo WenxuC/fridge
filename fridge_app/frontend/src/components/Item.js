@@ -15,43 +15,10 @@ import {
 } from '@mui/material';
 export default function Item({ setItems, items }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
-	const [quantity, setQuantity] = useState('');
 	const [name, setName] = useState('');
-	const [expiration, setExpiration] = useState('');
-	const [weight, setWeight] = useState('lb');
 	const [updateList, setUpdateList] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [open, setOpen] = useState(false);
-	const weights = [
-		{
-			value: 'lbs',
-			label: 'lbs',
-		},
-		{
-			value: 'oz',
-			label: 'oz',
-		},
-		{
-			value: 'fl. oz',
-			label: 'fl. oz',
-		},
-		{
-			value: 'c',
-			label: 'c',
-		},
-		{
-			value: 'tbsp',
-			label: 'tbsp',
-		},
-		{
-			value: 'tsp',
-			label: 'tsp',
-		},
-		{
-			value: 'qt',
-			label: 'qt',
-		},
-	];
 
 	useEffect(() => {
 		getItems();
@@ -66,10 +33,7 @@ export default function Item({ setItems, items }) {
 
 	const handleClose = () => {
 		setOpen(false);
-		setQuantity('');
 		setName('');
-		setExpiration('');
-		setWeight('');
 	};
 
 	const handleDelete = async e => {
@@ -143,18 +107,13 @@ export default function Item({ setItems, items }) {
 				Authorization: 'Bearer ' + String(authTokens.access),
 			},
 			body: JSON.stringify({
-				quantity: quantity + weight,
 				name: name,
-				expiration: expiration,
 			}),
 		});
 		if (response.status === 201) {
 			setUpdateList(true);
 			setOpen(false);
-			setQuantity('');
 			setName('');
-			setExpiration('');
-			setWeight('');
 		} else {
 			console.log('Bad Request');
 		}
@@ -177,17 +136,13 @@ export default function Item({ setItems, items }) {
 				{edit
 					? items.map(item => (
 							<List key={item.id}>
-								{item.name}: {item.quantity}
+								{item.name}
 								<Button value={item.id} onClick={handleDelete}>
 									X
 								</Button>
 							</List>
 					  ))
-					: items.map(item => (
-							<List key={item.id}>
-								{item.name}: {item.quantity}
-							</List>
-					  ))}
+					: items.map(item => <List key={item.id}>{item.name}</List>)}
 			</Grid>
 
 			<Grid item xs={12}>
@@ -211,41 +166,6 @@ export default function Item({ setItems, items }) {
 										placeholder='Item name'
 										value={name}
 										onChange={e => setName(e.target.value)}
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										required
-										margin='normal'
-										label='Quantity'
-										value={quantity}
-										onChange={e => setQuantity(e.target.value)}
-									></TextField>
-								</Grid>
-								<Grid item xs={2}>
-									<TextField
-										select
-										required
-										margin='normal'
-										helperText='Weight'
-										value={weight}
-										onChange={e => setWeight(e.target.value)}
-									>
-										{weights.map(option => (
-											<MenuItem key={option.value} value={option.value}>
-												{option.label}
-											</MenuItem>
-										))}
-									</TextField>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										margin='normal'
-										required
-										placeholder='Date'
-										value={expiration}
-										type='date'
-										onChange={e => setExpiration(e.target.value)}
 									/>
 								</Grid>
 							</Stack>
