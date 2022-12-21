@@ -39,7 +39,7 @@ export default function Login() {
 			<Grid item xs={12}>
 				<Button
 					type='submit'
-					value={[username, password]}
+					value={JSON.stringify({ username, password })}
 					variant='contained'
 					sx={{ mt: 3, mb: 2 }}
 					onClick={loginUser}

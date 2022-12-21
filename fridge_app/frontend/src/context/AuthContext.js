@@ -18,19 +18,19 @@ export const AuthProvider = ({ children }) => {
 			? JSON.parse(localStorage.getItem('authTokens'))
 			: null
 	);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const loginUser = async e => {
 		e.preventDefault();
-		const value = e.target.value.split(',');
+		const value = JSON.parse(e.target.value);
 		const response = await fetch('http://127.0.0.1:8000/account/token/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				username: value[0],
-				password: value[1],
+				username: value.username,
+				password: value.password,
 			}),
 		});
 		const data = await response.json();
