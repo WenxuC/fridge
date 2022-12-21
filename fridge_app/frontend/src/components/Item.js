@@ -4,7 +4,6 @@ import {
 	Grid,
 	TextField,
 	Button,
-	MenuItem,
 	Stack,
 	Typography,
 	List,
@@ -21,6 +20,23 @@ export default function Item({ setItems, items }) {
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
+		const getItems = async () => {
+			const response = await fetch('http://127.0.0.1:8000/items/getItems', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+			});
+
+			const data = await response.json();
+
+			if (response.status === 200) {
+				setItems(data);
+			} else if (response.statusText === 'Unauthorized') {
+				logoutUser();
+			}
+		};
 		getItems();
 		if (updateList) {
 			setUpdateList(false);
@@ -55,47 +71,12 @@ export default function Item({ setItems, items }) {
 			logoutUser();
 		}
 	};
-	// const handleEdit = async e => {
-	// 	const id = e.target.value;
-	// 	const response = await fetch('http://127.0.0.1:8000/items/updateItem', {
-	// 		method: 'PUT',
-	// 		headers: {
-	// 			'Content-Type': 'application/json',
-	// 			Authorization: 'Bearer ' + String(authTokens.access),
-	// 		},
-	// 		body: JSON.stringify({
-	// 			id: id,
-	// 		}),
-	// 	});
 
-	// 	if (response.status === 200) {
-	// 		setUpdateList(true);
-	// 	} else if (response.statusText === 'Unauthorized') {
-	// 		logoutUser();
-	// 	}
-	// };
 	const updateEdit = () => {
 		if (edit) {
 			setEdit(false);
 		} else {
 			setEdit(true);
-		}
-	};
-	const getItems = async () => {
-		const response = await fetch('http://127.0.0.1:8000/items/getItems', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + String(authTokens.access),
-			},
-		});
-
-		const data = await response.json();
-
-		if (response.status === 200) {
-			setItems(data);
-		} else if (response.statusText === 'Unauthorized') {
-			logoutUser();
 		}
 	};
 

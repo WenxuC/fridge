@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
@@ -10,12 +10,6 @@ export default function Register() {
 	const [password, getPassword] = useState('');
 	const [email, getEmail] = useState('');
 	const [error, getError] = useState('');
-
-	useEffect(() => {
-		setTimeout(() => {
-			getError('');
-		}, 5000);
-	}, []);
 
 	const handleSubmit = () => {
 		const body = {

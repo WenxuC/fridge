@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import {
 	Grid,
@@ -8,9 +8,12 @@ import {
 	ImageListItemBar,
 	ListSubheader,
 	IconButton,
+	Checkbox,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-export default function Recipe({ items }) {
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+export default function Recipe({ items, setLike }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 
@@ -34,6 +37,38 @@ export default function Recipe({ items }) {
 			logoutUser();
 		}
 	};
+
+	const handleChange = async e => {
+		const value = JSON.parse(e.target.value);
+		setLike(value);
+		if (e.target.checked) {
+			await fetch('http://127.0.0.1:8000/api/saveRecipe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+				body: JSON.stringify({
+					id: value.id,
+					title: value.title,
+					source: value.source,
+					image: value.image,
+				}),
+			});
+		} else {
+			await fetch('http://127.0.0.1:8000/api/deleteRecipe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+				body: JSON.stringify({
+					id: value.id,
+				}),
+			});
+		}
+	};
+
 	return (
 		<Grid container space={5} align='center'>
 			<Grid item xs={12}>
@@ -59,6 +94,17 @@ export default function Recipe({ items }) {
 										target='_blank'
 									>
 										<InfoIcon />
+										<Checkbox
+											icon={<FavoriteBorder />}
+											checkedIcon={<Favorite />}
+											onChange={handleChange}
+											value={JSON.stringify({
+												id: item.id,
+												title: item.title,
+												image: item.image,
+												source: item.source,
+											})}
+										/>
 									</IconButton>
 								}
 							/>
