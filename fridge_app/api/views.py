@@ -92,7 +92,6 @@ class DeleteRecipeView(APIView):
             id = serializer.data.get('id')
             user = request.user
             recipe_result = Recipe.objects.filter(id=id, user=user)
-            
             if recipe_result.exists():
                 recipe_result[0].delete()
                 return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
