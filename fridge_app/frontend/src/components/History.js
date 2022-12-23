@@ -20,7 +20,6 @@ export default function History({ like }) {
 
 			if (response.status === 200) {
 				setHistory(data);
-				console.log('here', history);
 			} else {
 				setHistory([]);
 			}
