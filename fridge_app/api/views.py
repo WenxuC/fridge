@@ -62,6 +62,7 @@ class GetRecipeView(APIView):
             image = responseSource.get('image')
             recipe = Recipe(title=title, id=id, source=source, image=image, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
+        
         return Response(recipeDict, status=status.HTTP_201_CREATED)
 
 class SaveRecipeView(APIView):

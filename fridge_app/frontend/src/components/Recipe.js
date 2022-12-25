@@ -1,23 +1,56 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import {
 	Grid,
 	Button,
-	ImageList,
-	ImageListItem,
-	ImageListItemBar,
-	ListSubheader,
 	IconButton,
+	CardHeader,
+	Card,
+	CardMedia,
+	CardContent,
+	Typography,
+	CardActions,
+	Collapse,
+	Stack,
 	Checkbox,
 } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
+import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import Favorite from '@mui/icons-material/Favorite';
-export default function Recipe({ items, setLike }) {
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import CircularProgress from '@mui/material/CircularProgress';
+
+export default function Recipe({ setLike }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [expanded, setExpanded] = useState(-1);
+	const [items, setItems] = useState([]);
+
+	useEffect(() => {
+		const getItems = async () => {
+			const response = await fetch('http://127.0.0.1:8000/items/getItems', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+			});
+
+			const data = await response.json();
+
+			if (response.status === 200) {
+				setItems(data);
+			} else if (response.statusText === 'Unauthorized') {
+				logoutUser();
+			}
+		};
+		getItems();
+	}, []);
 
 	const handleOnClick = async () => {
+		setLoading(true);
 		const response = await fetch('http://127.0.0.1:8000/api/getRecipe', {
 			method: 'POST',
 			headers: {
@@ -30,9 +63,9 @@ export default function Recipe({ items, setLike }) {
 		});
 
 		const data = await response.json();
-
 		if (response.status === 201) {
 			setRecipes(data);
+			setLoading(false);
 		} else if (response.statusText === 'Unauthorized') {
 			logoutUser();
 		}
@@ -69,48 +102,119 @@ export default function Recipe({ items, setLike }) {
 		}
 	};
 
+	const handleExpandClick = i => {
+		setExpanded(expanded === i ? -1 : i);
+	};
 	return (
-		<Grid container space={5} align='center'>
+		<Grid container spacing={4} align='center'>
 			<Grid item xs={12}>
 				<Button variant='contained' onClick={handleOnClick}>
 					Search Recipe
 				</Button>
 			</Grid>
 			<Grid item xs={12}>
-				<ImageList sx={{ width: 500, height: 450 }}>
-					<ImageListItem key='Subheader' cols={2}>
-						<ListSubheader component='div'>Recipes</ListSubheader>
-					</ImageListItem>
-					{recipes.map(item => (
-						<ImageListItem key={item.id}>
-							<img src={item.image} alt={item.title} loading='lazy' />
-							<ImageListItemBar
-								title={item.title}
-								actionIcon={
-									<IconButton
-										sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-										aria-label={`info about ${item.title}`}
-										href={item.source}
-										target='_blank'
+				{loading ? (
+					<CircularProgress />
+				) : (
+					<Grid container spacing={4}>
+						{recipes.map((item, index) => (
+							<Grid item key={index} xs={12} sm={5} md={3}>
+								<Stack direction={'row'}>
+									<Card
+										sx={{
+											height: '100%',
+											display: 'flex',
+											flexDirection: 'column',
+										}}
 									>
-										<InfoIcon />
-										<Checkbox
-											icon={<FavoriteBorder />}
-											checkedIcon={<Favorite />}
-											onChange={handleChange}
-											value={JSON.stringify({
-												id: item.id,
-												title: item.title,
-												image: item.image,
-												source: item.source,
-											})}
+										<CardHeader title={item.title} />
+										<CardMedia
+											component='img'
+											height='194'
+											image={item.image}
 										/>
-									</IconButton>
-								}
-							/>
-						</ImageListItem>
-					))}
-				</ImageList>
+										<CardContent>
+											<Typography variant='body2' color='text.secondary'>
+												This impressive paella is a perfect party dish and a fun
+												meal to cook together with your guests. Add 1 cup of
+												frozen peas along with the mussels, if you like.
+											</Typography>
+										</CardContent>
+										<CardActions disableSpacing>
+											<Button
+												href={item.source}
+												target='_blank'
+												endIcon={<InsertLinkRoundedIcon />}
+											>
+												Link
+											</Button>
+											<Checkbox
+												icon={<FavoriteBorder />}
+												checkedIcon={<Favorite />}
+												onChange={handleChange}
+												value={JSON.stringify({
+													id: item.id,
+													title: item.title,
+													image: item.image,
+													source: item.source,
+												})}
+											/>
+											<IconButton
+												onClick={() => handleExpandClick(index)}
+												aria-expanded={expanded === index}
+											>
+												Recipe
+												{expanded === index ? (
+													<ExpandLessRoundedIcon />
+												) : (
+													<ExpandMoreRoundedIcon />
+												)}
+											</IconButton>
+										</CardActions>
+										<Collapse
+											in={expanded === index}
+											timeout='auto'
+											unmountOnExit
+										>
+											<CardContent>
+												<Typography paragraph>Method:</Typography>
+												<Typography paragraph>
+													Heat 1/2 cup of the broth in a pot until simmering,
+													add saffron and set aside for 10 minutes.
+												</Typography>
+												<Typography paragraph>
+													Heat oil in a (14- to 16-inch) paella pan or a large,
+													deep skillet over medium-high heat. Add chicken,
+													shrimp and chorizo, and cook, stirring occasionally
+													until lightly browned, 6 to 8 minutes. Transfer shrimp
+													to a large plate and set aside, leaving chicken and
+													chorizo in the pan. Add pimentón, bay leaves, garlic,
+													tomatoes, onion, salt and pepper, and cook, stirring
+													often until thickened and fragrant, about 10 minutes.
+													Add saffron broth and remaining 4 1/2 cups chicken
+													broth; bring to a boil.
+												</Typography>
+												<Typography paragraph>
+													Add rice and stir very gently to distribute. Top with
+													artichokes and peppers, and cook without stirring,
+													until most of the liquid is absorbed, 15 to 18
+													minutes. Reduce heat to medium-low, add reserved
+													shrimp and mussels, tucking them down into the rice,
+													and cook again without stirring, until mussels have
+													opened and rice is just tender, 5 to 7 minutes more.
+												</Typography>
+												<Typography>
+													Set aside off of the heat to let rest for 10 minutes,
+													and then serve.
+												</Typography>
+											</CardContent>
+										</Collapse>
+									</Card>
+								</Stack>
+							</Grid>
+						))}
+					</Grid>
+				)}
 			</Grid>
 		</Grid>
 	);
