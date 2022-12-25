@@ -8,17 +8,15 @@ import Register from './components/Register';
 
 function App() {
 	return (
-		<div className='App'>
-			<Router>
-				<AuthProvider>
-					<Routes>
-						<Route path='/dashboard' element={<Dashboard />} />
-						<Route path='/login' element={<Login />} />
-						<Route path='/register' element={<Register />} />
-					</Routes>
-				</AuthProvider>
-			</Router>
-		</div>
+		<Router>
+			<AuthProvider>
+				<Routes>
+					<Route path='/dashboard' element={<Dashboard />} />
+					<Route path='/login' element={<Login />} />
+					<Route path='/register' element={<Register />} />
+				</Routes>
+			</AuthProvider>
+		</Router>
 	);
 }
 

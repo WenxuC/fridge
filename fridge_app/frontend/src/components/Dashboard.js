@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import '../App.css';
+import '../index.css';
 import {
 	Button,
 	Typography,
@@ -90,7 +91,13 @@ export default function Dashboard() {
 			</AppBar>
 			<Box></Box>
 			<Container maxWidth='sm'>
-				<Typography variant='h4' align='center' color='text.primary'>
+				<Typography
+					variant='h4'
+					align='center'
+					sx={{
+						p: 2,
+					}}
+				>
 					{user.username.toUpperCase()}'s Fridge
 				</Typography>
 			</Container>
