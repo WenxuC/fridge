@@ -6,13 +6,17 @@ import {
 	Button,
 	Stack,
 	Typography,
-	List,
 	Dialog,
 	DialogTitle,
 	DialogContent,
 	DialogActions,
+	List,
+	ListItem,
+	ListItemText,
 } from '@mui/material';
-export default function Item({ setItems, items }) {
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+
+export default function Items({ setItems, items }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [name, setName] = useState('');
 	const [updateList, setUpdateList] = useState(false);
@@ -102,28 +106,28 @@ export default function Item({ setItems, items }) {
 	return (
 		<Grid container spacing={1} align='center'>
 			<Grid item xs={12}>
-				<Typography>---Ingredients---</Typography>
-				<Typography>
-					{edit ? (
-						<Button type='submit' onClick={updateEdit}>
-							Done
-						</Button>
-					) : (
-						<Button type='submit' onClick={updateEdit}>
-							Edit
-						</Button>
-					)}
-				</Typography>
-				{edit
-					? items.map(item => (
-							<List key={item.id}>
-								{item.name}
-								<Button value={item.id} onClick={handleDelete}>
-									X
+				<List
+					sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+				>
+					{items.map(item => (
+						<ListItem
+							key={item.id}
+							secondaryAction={
+								<Button
+									value={item.id}
+									color='error'
+									onClick={handleDelete}
+									endIcon={<DeleteRoundedIcon />}
+								>
+									Trash
 								</Button>
-							</List>
-					  ))
-					: items.map(item => <List key={item.id}>{item.name}</List>)}
+							}
+						>
+							{' '}
+							<ListItemText primary={item.name} />
+						</ListItem>
+					))}
+				</List>
 			</Grid>
 
 			<Grid item xs={12}>
