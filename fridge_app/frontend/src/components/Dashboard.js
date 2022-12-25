@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import '../App.css';
 import {
 	Button,
 	Typography,
@@ -63,8 +64,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div>
-			<CssBaseline />
+		<div className='App'>
 			<AppBar position='relative'>
 				<Toolbar>
 					<RestaurantMenuRoundedIcon sx={{ mr: 2 }} />
@@ -88,20 +88,9 @@ export default function Dashboard() {
 					</Container>
 				</Toolbar>
 			</AppBar>
-			<Box
-				sx={{
-					bgcolor: 'background.paper',
-					pt: 0,
-					pb: 3,
-				}}
-			></Box>
+			<Box></Box>
 			<Container maxWidth='sm'>
-				<Typography
-					variant='h4'
-					align='center'
-					color='text.primary'
-					gutterBottom
-				>
+				<Typography variant='h4' align='center' color='text.primary'>
 					{user.username.toUpperCase()}'s Fridge
 				</Typography>
 			</Container>
