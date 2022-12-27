@@ -6,6 +6,8 @@ class Recipe(models.Model):
     title = models.CharField(max_length=150)
     source = models.URLField(max_length=200)
     image = models.URLField(max_length=200, default=True)
+    summary = models.TextField(blank=True, default=True)
     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    
 
     
