@@ -5,5 +5,5 @@ urlpatterns = [
     path('getRecipe', GetRecipeView.as_view()),
     path('saveRecipe', SaveRecipeView.as_view()),
     path('deleteRecipe', DeleteRecipeView.as_view()),
-    path('getHistory', GetHistoryView.as_view())
+    path('getHistory', GetHistoryView.as_view()),
 ]
