@@ -12,6 +12,12 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+
 ### Django ###
 *.log
 *.pot
