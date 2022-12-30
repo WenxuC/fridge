@@ -62,6 +62,7 @@ class GetRecipeView(APIView):
             source = responseSource.get('sourceUrl')
             image = responseSource.get('image')
             summary = responseSource.get('summary')
+            
             recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         
@@ -79,10 +80,10 @@ class SaveRecipeView(APIView):
             image = serializer.data.get('image')
             summary = serializer.data.get('summary')
             user = request.user
-            
             recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, user=user)
             recipe.save()
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
+        
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-b90prz7_pt4gimhge%%p92875d+1u)tqm@(4r)=50hk8e$l4u(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['18.116.164.10', 'localhost', '127.0.0.1' ]
 
 
 # Application definition
@@ -84,9 +84,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = (
-#   'http://localhost:8000',
-# )
+
 
 
 ROOT_URLCONF = 'fridge_app.urls'
@@ -94,7 +92,7 @@ ROOT_URLCONF = 'fridge_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -157,6 +155,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
