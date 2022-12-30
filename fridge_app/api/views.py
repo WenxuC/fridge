@@ -49,6 +49,14 @@ class GetRecipeView(APIView):
         for i in range(len(response)):
             title = response[i].get('title')
             id = response[i].get('id')
+            
+            favorite = False
+            recipe_result = Recipe.objects.filter(id=id, user=request.user)
+            if recipe_result.exists():
+                favorite = True
+            else:
+                favorite = False
+
             responseSource = get(f"https://api.spoonacular.com/recipes/{id}/information",
                 headers={
                     'Content-Type': 'application/json',
@@ -59,11 +67,13 @@ class GetRecipeView(APIView):
                 }
             ).json()
 
+            
+            
             source = responseSource.get('sourceUrl')
             image = responseSource.get('image')
             summary = responseSource.get('summary')
             
-            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, user=request.user)
+            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         
         return Response(recipeDict, status=status.HTTP_201_CREATED)
@@ -79,8 +89,9 @@ class SaveRecipeView(APIView):
             source = serializer.data.get('source')
             image = serializer.data.get('image')
             summary = serializer.data.get('summary')
+            favorite = serializer.data.get('favorite')
             user = request.user
-            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, user=user)
+            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
             recipe.save()
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
         

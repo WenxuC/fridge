@@ -5,7 +5,6 @@ import '../App.css';
 import {
 	Button,
 	Typography,
-	CssBaseline,
 	AppBar,
 	Toolbar,
 	Stack,
@@ -14,6 +13,7 @@ import {
 	Tabs,
 	Container,
 	Grid,
+	CssBaseline,
 } from '@mui/material';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -66,6 +66,7 @@ export default function Dashboard() {
 
 	return (
 		<div className='App'>
+			<CssBaseline />
 			<AppBar position='relative'>
 				<Toolbar>
 					<RestaurantMenuRoundedIcon sx={{ mr: 2 }} />

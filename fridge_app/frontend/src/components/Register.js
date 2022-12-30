@@ -20,7 +20,6 @@ export default function Register() {
 		axios
 			.post('http://127.0.0.1:8000/account/register', body)
 			.catch(function (error) {
-				console.log('error', error.response);
 				if (error.response.status === 400) {
 					return getError(error.response.status);
 				}

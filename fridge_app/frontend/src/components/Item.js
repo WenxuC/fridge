@@ -106,28 +106,32 @@ export default function Items({ setItems, items }) {
 	return (
 		<Grid container spacing={1} align='center'>
 			<Grid item xs={12}>
-				<List
-					sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-				>
-					{items.map(item => (
-						<ListItem
-							key={item.id}
-							secondaryAction={
-								<Button
-									value={item.id}
-									color='error'
-									onClick={handleDelete}
-									endIcon={<DeleteRoundedIcon />}
-								>
-									Trash
-								</Button>
-							}
-						>
-							{' '}
-							<ListItemText primary={item.name} />
-						</ListItem>
-					))}
-				</List>
+				{items.length > 0 ? (
+					<List
+						sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+					>
+						{items.map(item => (
+							<ListItem
+								key={item.id}
+								secondaryAction={
+									<Button
+										value={item.id}
+										color='error'
+										onClick={handleDelete}
+										endIcon={<DeleteRoundedIcon />}
+									>
+										Trash
+									</Button>
+								}
+							>
+								{' '}
+								<ListItemText primary={item.name} />
+							</ListItem>
+						))}
+					</List>
+				) : (
+					<Typography variant='h6'>Your Pantry Is Empty</Typography>
+				)}
 			</Grid>
 
 			<Grid item xs={12}>
