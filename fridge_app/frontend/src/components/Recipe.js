@@ -38,7 +38,6 @@ export default function Recipe({ setLike }) {
 					Authorization: 'Bearer ' + String(authTokens.access),
 				},
 			});
-
 			const data = await response.json();
 
 			if (response.status === 200) {
@@ -87,6 +86,7 @@ export default function Recipe({ setLike }) {
 					title: value.title,
 					source: value.source,
 					image: value.image,
+					favorite: true,
 				}),
 			});
 		} else {
@@ -162,6 +162,7 @@ export default function Recipe({ setLike }) {
 												Link
 											</Button>
 											<Checkbox
+												defaultChecked={item.favorite}
 												icon={<FavoriteBorder />}
 												checkedIcon={<Favorite />}
 												onChange={handleChange}

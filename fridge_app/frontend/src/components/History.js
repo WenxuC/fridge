@@ -12,6 +12,7 @@ import {
 	Typography,
 	Button,
 	Stack,
+	typographyClasses,
 } from '@mui/material';
 
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -39,7 +40,7 @@ export default function History({ like }) {
 
 			if (response.status === 200) {
 				setHistory(data);
-			} else {
+			} else if (response.status === 404) {
 				setHistory([]);
 			}
 		};
@@ -62,6 +63,7 @@ export default function History({ like }) {
 				id: value.id,
 			}),
 		});
+
 		const data = await response.json();
 
 		if (response.status === 200) {
