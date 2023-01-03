@@ -78,6 +78,70 @@ class GetRecipeView(APIView):
         
         return Response(recipeDict, status=status.HTTP_201_CREATED)
 
+class AdvancedRecipeView(APIView):
+    serializer_class = RecipeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
+        
+        typeOfFood = request.data.get('type')
+        cuisine = request.data.get('cuisine')
+        diet = request.data.get('diet')
+        intolerance = ",".join(request.data.get('intolerance'))
+        user = request.user
+        ingredients = request.data.get('ingredients')
+        ingredientsList = []
+        for data in ingredients:
+            ingredientsList.append(data['name'])
+        ingredientsList = ",".join(ingredientsList)
+        
+        response = get('https://api.spoonacular.com/recipes/complexSearch',
+            headers={
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey, 
+            },
+            params={
+                'includeIngredients': ingredientsList,
+                'type': typeOfFood,
+                'cuisine': cuisine,
+                'diet': diet,
+                'intolerance': intolerance,
+                'number': 4,
+                'ignorePantry': True,
+            }
+        ).json()
+        if response['totalResults'] == 0:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            
+            recipeDict = []
+            for i in range(len(response['results'])):
+                title = response['results'][i]['title']
+                id = response['results'][i]['id']
+                favorite = False
+                recipe_result = Recipe.objects.filter(id=id, user=request.user)
+                if recipe_result.exists():
+                    favorite = True
+                else:
+                    favorite = False
+
+                responseSource = get(f"https://api.spoonacular.com/recipes/{id}/information",
+                    headers={
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                    },
+                    params={
+                        'includeNutrition': False
+                    }
+                ).json()
+
+                source = responseSource.get('sourceUrl')
+                image = responseSource.get('image')
+                summary = responseSource.get('summary')
+                recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
+                recipeDict.append(RecipeSerializer(recipe).data)
+            return Response(recipeDict, status=status.HTTP_200_OK)
+            
 class SaveRecipeView(APIView):
     serializer_class = RecipeSerializer
     permission_classes = [IsAuthenticated]
