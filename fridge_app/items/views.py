@@ -19,9 +19,13 @@ class CreateItemView(APIView):
         if serializer.is_valid():
             name = serializer.data.get('name')
             user = request.user
-            item = Items(name=name, user=user)
-            item.save()
-            return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
+            name_query = Items.objects.filter(name=name)
+            if name_query.exists():
+                return Response({'Bad Request': 'Item already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                item = Items(name=name, user=user)
+                item.save()
+                return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetItemView(APIView):
@@ -62,4 +66,5 @@ class DeleteItemView(APIView):
         if item_result.exists():
             item_result[0].delete()
             return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
+        print(serializer.erorrs)
         return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)

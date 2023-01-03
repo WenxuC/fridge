@@ -13,6 +13,8 @@ import {
 	List,
 	ListItem,
 	ListItemText,
+	Alert,
+	AlertTitle,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
@@ -22,7 +24,7 @@ export default function Items({ setItems, items }) {
 	const [updateList, setUpdateList] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [open, setOpen] = useState(false);
-
+	const [alert, setAlert] = useState(false);
 	useEffect(() => {
 		const getItems = async () => {
 			const response = await fetch('http://127.0.0.1:8000/items/getItems', {
@@ -45,7 +47,7 @@ export default function Items({ setItems, items }) {
 		if (updateList) {
 			setUpdateList(false);
 		}
-	}, [updateList, edit, open]);
+	}, [updateList, edit, open, alert]);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -99,8 +101,9 @@ export default function Items({ setItems, items }) {
 			setUpdateList(true);
 			setOpen(false);
 			setName('');
-		} else {
-			console.log('Bad Request');
+			setAlert(false);
+		} else if (response.status === 400) {
+			setAlert(true);
 		}
 	};
 	return (
@@ -140,6 +143,12 @@ export default function Items({ setItems, items }) {
 				</Button>
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Add Item</DialogTitle>
+					{alert ? (
+						<Alert severity='error'>
+							<AlertTitle>Error</AlertTitle>
+							Item already exists.
+						</Alert>
+					) : null}
 					<DialogContent>
 						<Grid container spacing={1} align='center'>
 							<Stack
