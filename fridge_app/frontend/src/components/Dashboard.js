@@ -21,6 +21,7 @@ import AuthContext from '../context/AuthContext';
 import Items from './Item';
 import Recipe from './Recipe';
 import History from './History';
+import Search from './Search';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -113,6 +114,7 @@ export default function Dashboard() {
 						<Tab label='History' {...allProps(0)} />
 						<Tab label='Pantry' {...allProps(1)} />
 						<Tab label='Search' {...allProps(2)} />
+						<Tab label='Advanced Search' {...allProps(3)} />
 					</Tabs>
 				</Box>
 				<TabPanel value={value} index={0}>
@@ -123,6 +125,9 @@ export default function Dashboard() {
 				</TabPanel>
 				<TabPanel value={value} index={2}>
 					<Recipe setLike={setLike} />
+				</TabPanel>
+				<TabPanel value={value} index={3}>
+					<Search setLike={setLike} />
 				</TabPanel>
 			</Box>
 		</div>
