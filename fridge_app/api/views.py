@@ -67,9 +67,7 @@ class GetRecipeView(APIView):
                 }
             ).json()
 
-            
-            
-            source = responseSource.get('sourceUrl')
+            source = responseSource.get('spoonacularSourceUrl')
             image = responseSource.get('image')
             summary = responseSource.get('summary')
             
@@ -135,7 +133,7 @@ class AdvancedRecipeView(APIView):
                     }
                 ).json()
 
-                source = responseSource.get('sourceUrl')
+                source = responseSource.get('spoonacularSourceUrl')
                 image = responseSource.get('image')
                 summary = responseSource.get('summary')
                 recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
