@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import '../App.css';
+// import '../App.css';
 
 import {
 	Button,
@@ -66,7 +66,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div className='App'>
+		<div>
 			<CssBaseline />
 			<AppBar position='relative'>
 				<Toolbar>

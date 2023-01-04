@@ -1,4 +1,4 @@
-import './App.css';
+// import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 // Components
@@ -6,7 +6,7 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 
-function App() {
+export default function App() {
 	return (
 		<Router>
 			<AuthProvider>
@@ -20,5 +20,3 @@ function App() {
 		</Router>
 	);
 }
-
-export default App;
