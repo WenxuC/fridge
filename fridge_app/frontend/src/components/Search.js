@@ -30,7 +30,6 @@ import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import CircularProgress from '@mui/material/CircularProgress';
-import { maxWidth } from '@mui/system';
 
 export default function Recipe({ setLike }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);

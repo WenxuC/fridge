@@ -12,7 +12,6 @@ import {
 	Typography,
 	Button,
 	Stack,
-	typographyClasses,
 } from '@mui/material';
 
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
