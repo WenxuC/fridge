@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+from .credentials import DJANGO_SECRET_KEY
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,12 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b90prz7_pt4gimhge%%p92875d+1u)tqm@(4r)=50hk8e$l4u('
+SECRET_KEY = DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.116.164.10', 'localhost', '127.0.0.1' ]
+ALLOWED_HOSTS = []
 
 
 # Application definition

@@ -62,3 +62,4 @@ MANIFEST
 fridge_app/db.sqlite3
 fridge_app/db.sqlite3
 fridge_app/api/credentials.py
+fridge_app/fridge_app/credentials.py
