@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import {
 	Grid,
@@ -17,6 +18,7 @@ import {
 	AlertTitle,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+const URL = config.url;
 
 export default function Items({ setItems, items }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
@@ -27,7 +29,7 @@ export default function Items({ setItems, items }) {
 	const [alert, setAlert] = useState(false);
 	useEffect(() => {
 		const getItems = async () => {
-			const response = await fetch('http://127.0.0.1:8000/items/getItems', {
+			const response = await fetch(`${URL}items/getItems`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -60,7 +62,7 @@ export default function Items({ setItems, items }) {
 
 	const handleDelete = async e => {
 		const id = e.target.value;
-		const response = await fetch('http://127.0.0.1:8000/items/deleteItem', {
+		const response = await fetch(`${URL}items/deleteItem`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -87,7 +89,7 @@ export default function Items({ setItems, items }) {
 	};
 
 	const handleSubmit = async () => {
-		const response = await fetch('http://127.0.0.1:8000/items/createItem', {
+		const response = await fetch(`${URL}items/createItem`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

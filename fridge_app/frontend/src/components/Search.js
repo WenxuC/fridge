@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import {
 	Grid,
@@ -31,6 +32,8 @@ import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import CircularProgress from '@mui/material/CircularProgress';
 
+const URL = config.url;
+
 export default function Recipe({ setLike }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
@@ -47,7 +50,7 @@ export default function Recipe({ setLike }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			const response = await fetch('http://127.0.0.1:8000/items/getItems', {
+			const response = await fetch(`${URL}items/getItems`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -81,7 +84,7 @@ export default function Recipe({ setLike }) {
 	];
 	const handleSearch = async () => {
 		setLoading(true);
-		const response = await fetch('http://127.0.0.1:8000/api/advancedRecipe', {
+		const response = await fetch(`${URL}api/advancedRecipe`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -117,7 +120,7 @@ export default function Recipe({ setLike }) {
 		const value = JSON.parse(e.target.value);
 		setLike(value);
 		if (e.target.checked) {
-			await fetch('http://127.0.0.1:8000/api/saveRecipe', {
+			await fetch(`${URL}api/saveRecipe`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -132,7 +135,7 @@ export default function Recipe({ setLike }) {
 				}),
 			});
 		} else {
-			await fetch('http://127.0.0.1:8000/api/deleteRecipe', {
+			await fetch(`${URL}api/deleteRecipe`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

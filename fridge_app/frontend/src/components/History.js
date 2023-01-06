@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import {
 	Grid,
@@ -19,6 +20,8 @@ import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
+const URL = config.url;
+
 export default function History({ like }) {
 	const { authTokens } = useContext(AuthContext);
 	const [history, setHistory] = useState([]);
@@ -27,7 +30,7 @@ export default function History({ like }) {
 	const [summary, setSummary] = useState([]);
 	useEffect(() => {
 		const getHistory = async () => {
-			const response = await fetch('http://127.0.0.1:8000/api/getHistory', {
+			const response = await fetch(`${URL}api/getHistory`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -52,7 +55,7 @@ export default function History({ like }) {
 	const handleDelete = async e => {
 		const value = JSON.parse(e.target.value);
 
-		const response = await fetch('http://127.0.0.1:8000/api/deleteRecipe', {
+		const response = await fetch(`${URL}api/deleteRecipe`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect } from 'react';
+import { config } from '../components/Constants';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+
 const AuthContext = createContext();
+const URL = config.url;
 
 export default AuthContext;
 
@@ -23,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 	const loginUser = async e => {
 		e.preventDefault();
 		const value = JSON.parse(e.target.value);
-		const response = await fetch('http://127.0.0.1:8000/account/token/', {
+		const response = await fetch(`${URL}account/token/`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -52,16 +55,13 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	const updateToken = async () => {
-		const response = await fetch(
-			'http://127.0.0.1:8000/account/token/refresh/',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ refresh: authTokens?.refresh }),
-			}
-		);
+		const response = await fetch(`${URL}account/token/refresh/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ refresh: authTokens?.refresh }),
+		});
 
 		const data = await response.json();
 

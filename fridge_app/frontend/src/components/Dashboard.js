@@ -91,7 +91,7 @@ export default function Dashboard() {
 					</Container>
 				</Toolbar>
 			</AppBar>
-			<Box></Box>
+
 			<Container maxWidth='sm'>
 				<Typography
 					variant='h4'

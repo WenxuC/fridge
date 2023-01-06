@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { config } from './Constants';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+const URL = config.url;
 
 export default function Register() {
 	const navigate = useNavigate();
@@ -18,7 +21,7 @@ export default function Register() {
 			email: email,
 		};
 		axios
-			.post('http://127.0.0.1:8000/account/register', body)
+			.post(`${URL}account/register`, body)
 			.catch(function (error) {
 				if (error.response.status === 400) {
 					return getError(error.response.status);
