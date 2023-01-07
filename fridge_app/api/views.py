@@ -51,7 +51,7 @@ class GetRecipeView(APIView):
             id = response[i].get('id')
             
             favorite = False
-            recipe_result = Recipe.objects.filter(id=id, user=request.user)
+            recipe_result = Recipe.objects.filter(recipeID=id, user=request.user)
             if recipe_result.exists():
                 favorite = True
             else:
@@ -71,7 +71,7 @@ class GetRecipeView(APIView):
             image = responseSource.get('image')
             summary = responseSource.get('summary')
             
-            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
+            recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         
         return Response(recipeDict, status=status.HTTP_201_CREATED)
@@ -117,7 +117,7 @@ class AdvancedRecipeView(APIView):
                 title = response['results'][i]['title']
                 id = response['results'][i]['id']
                 favorite = False
-                recipe_result = Recipe.objects.filter(id=id, user=request.user)
+                recipe_result = Recipe.objects.filter(recipeID=id, user=request.user)
                 if recipe_result.exists():
                     favorite = True
                 else:
@@ -136,8 +136,9 @@ class AdvancedRecipeView(APIView):
                 source = responseSource.get('spoonacularSourceUrl')
                 image = responseSource.get('image')
                 summary = responseSource.get('summary')
-                recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
+                recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
                 recipeDict.append(RecipeSerializer(recipe).data)
+                
             return Response(recipeDict, status=status.HTTP_200_OK)
             
 class SaveRecipeView(APIView):
@@ -147,16 +148,16 @@ class SaveRecipeView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             title = serializer.data.get('title')
-            id = serializer.data.get('id')
+            id = serializer.data.get('recipeID')
             source = serializer.data.get('source')
             image = serializer.data.get('image')
             summary = serializer.data.get('summary')
             favorite = serializer.data.get('favorite')
             user = request.user
-            recipe = Recipe(title=title, id=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
+            recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
             recipe.save()
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
-        
+        print(serializer.errors, serializer)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -168,7 +169,7 @@ class DeleteRecipeView(APIView):
         if serializer.is_valid():
             id = serializer.data.get('id')
             user = request.user
-            recipe_result = Recipe.objects.filter(id=id, user=user)
+            recipe_result = Recipe.objects.filter(recipeID=id, user=user)
             if recipe_result.exists():
                 recipe_result[0].delete()
                 return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)

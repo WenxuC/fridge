@@ -68,6 +68,7 @@ export default function Recipe({ setLike }) {
 		const data = await response.json();
 		if (response.status === 201) {
 			setRecipes(data);
+
 			setLoading(false);
 		} else if (response.statusText === 'Unauthorized') {
 			logoutUser();
@@ -76,6 +77,7 @@ export default function Recipe({ setLike }) {
 
 	const handleChange = async e => {
 		const value = JSON.parse(e.target.value);
+
 		setLike(value);
 		if (e.target.checked) {
 			await fetch(`${URL}api/saveRecipe`, {
@@ -85,7 +87,7 @@ export default function Recipe({ setLike }) {
 					Authorization: 'Bearer ' + String(authTokens.access),
 				},
 				body: JSON.stringify({
-					id: value.id,
+					recipeID: value.id,
 					title: value.title,
 					source: value.source,
 					image: value.image,
@@ -125,7 +127,7 @@ export default function Recipe({ setLike }) {
 		<Grid container spacing={4} align='center'>
 			<Grid item xs={12}>
 				<Button variant='contained' onClick={handleOnClick}>
-					Search Recipe
+					Search Recipes
 				</Button>
 			</Grid>
 			<Grid item xs={12}>
@@ -170,7 +172,7 @@ export default function Recipe({ setLike }) {
 												checkedIcon={<Favorite />}
 												onChange={handleChange}
 												value={JSON.stringify({
-													id: item.id,
+													id: item.recipeID,
 													title: item.title,
 													image: item.image,
 													source: item.source,

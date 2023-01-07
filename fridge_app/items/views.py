@@ -19,7 +19,7 @@ class CreateItemView(APIView):
         if serializer.is_valid():
             name = serializer.data.get('name')
             user = request.user
-            name_query = Items.objects.filter(name=name)
+            name_query = Items.objects.filter(name=name, user=user)
             if name_query.exists():
                 return Response({'Bad Request': 'Item already exists'}, status=status.HTTP_400_BAD_REQUEST)
             else:

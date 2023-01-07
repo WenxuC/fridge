@@ -127,7 +127,7 @@ export default function Recipe({ setLike }) {
 					Authorization: 'Bearer ' + String(authTokens.access),
 				},
 				body: JSON.stringify({
-					id: value.id,
+					recipeID: value.id,
 					title: value.title,
 					source: value.source,
 					image: value.image,
@@ -314,7 +314,7 @@ export default function Recipe({ setLike }) {
 												checkedIcon={<Favorite />}
 												onChange={handleChange}
 												value={JSON.stringify({
-													id: item.id,
+													id: item.recipeID,
 													title: item.title,
 													image: item.image,
 													source: item.source,
