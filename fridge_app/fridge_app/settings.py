@@ -85,7 +85,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 CORS_ORIGIN_ALLOW_ALL = True
-
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 
 ROOT_URLCONF = 'fridge_app.urls'
