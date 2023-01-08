@@ -133,11 +133,11 @@ export default function Register() {
 								Sign Up
 							</Button>
 							<Grid container>
-								<Grid item xs>
+								{/* <Grid item xs>
 									<Link href='#' variant='body2'>
 										Forgot password?
 									</Link>
-								</Grid>
+								</Grid> */}
 								<Grid item>
 									<Link href='/login' variant='body2'>
 										{'Already have an account?'}
