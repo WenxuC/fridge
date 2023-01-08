@@ -47,8 +47,8 @@ export default function Recipe({ setLike }) {
 
 			if (response.status === 200) {
 				setItems(data);
-			} else if (response.statusText === 'Unauthorized') {
-				logoutUser();
+			} else if (response.status === 400) {
+				alert('Please add at least one item in your pantry.');
 			}
 		};
 		getItems();
@@ -70,10 +70,10 @@ export default function Recipe({ setLike }) {
 		const data = await response.json();
 		if (response.status === 201) {
 			setRecipes(data);
-
 			setLoading(false);
-		} else if (response.statusText === 'Unauthorized') {
-			logoutUser();
+		} else {
+			alert('No recipes found. Please try again.');
+			setLoading(false);
 		}
 	};
 
@@ -128,15 +128,9 @@ export default function Recipe({ setLike }) {
 	return (
 		<Grid container spacing={4} align='center' justifyContent={'center'}>
 			<Grid item xs={6}>
-				{items.length === 0 ? (
-					<Alert severity='warning' align='center'>
-						Please add at least one item in your pantry.
-					</Alert>
-				) : (
-					<Button variant='contained' onClick={handleOnClick}>
-						Search Recipes
-					</Button>
-				)}
+				<Button variant='contained' onClick={handleOnClick}>
+					Search Recipes
+				</Button>
 			</Grid>
 			<Grid item xs={12}>
 				{loading ? (

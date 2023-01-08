@@ -60,8 +60,8 @@ export default function Recipe({ setLike }) {
 
 			if (response.status === 200) {
 				setItems(data);
-			} else if (response.statusText === 'Unauthorized') {
-				logoutUser();
+			} else if (response.status === 400) {
+				setAlert(true);
 			}
 		};
 		getItems();

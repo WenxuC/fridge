@@ -35,7 +35,11 @@ class GetItemView(APIView):
         user = request.user
         items = user.items_set.all()
         serializer = ItemSerializer(items, many=True)
-        return Response(serializer.data)
+        if len(items):
+            return Response(serializer.data)
+        else:
+            return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
             
 class UpdateItemView(APIView):
     permission_classes = [IsAuthenticated]
@@ -60,11 +64,10 @@ class UpdateItemView(APIView):
 class DeleteItemView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
-        id = request.data.get('id')
+        name = request.data.get('name')
         user = request.user
-        item_result = Items.objects.filter(id=id, user=user)
+        item_result = Items.objects.filter(name=name, user=user)
         if item_result.exists():
             item_result[0].delete()
             return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
-        print(id, user), item_result
         return Response({'msg':'Item not found'}, status=status.HTTP_400_BAD_REQUEST)

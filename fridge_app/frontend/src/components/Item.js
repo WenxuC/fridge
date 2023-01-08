@@ -37,12 +37,7 @@ export default function Items({ setItems, items }) {
 			});
 
 			const data = await response.json();
-
-			if (response.status === 200) {
-				setItems(data);
-			} else if (response.statusText === 'Unauthorized') {
-				logoutUser();
-			}
+			setItems(data);
 		};
 		getItems();
 		if (updateList) {
@@ -60,8 +55,7 @@ export default function Items({ setItems, items }) {
 	};
 
 	const handleDelete = async e => {
-		const id = e.target.value;
-		print(id);
+		const name = e.target.value;
 		const response = await fetch(`${URL}items/deleteItem`, {
 			method: 'POST',
 			headers: {
@@ -69,7 +63,7 @@ export default function Items({ setItems, items }) {
 				Authorization: 'Bearer ' + String(authTokens.access),
 			},
 			body: JSON.stringify({
-				id: id,
+				name: name,
 			}),
 		});
 
@@ -117,10 +111,10 @@ export default function Items({ setItems, items }) {
 					>
 						{items.map(item => (
 							<ListItem
-								key={item.id}
+								key={item.name}
 								secondaryAction={
 									<Button
-										value={item.id}
+										value={item.name}
 										color='error'
 										onClick={handleDelete}
 										endIcon={<DeleteRoundedIcon />}

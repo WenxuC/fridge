@@ -73,8 +73,10 @@ class GetRecipeView(APIView):
             
             recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
-        
-        return Response(recipeDict, status=status.HTTP_201_CREATED)
+        if len(recipeDict):
+            return Response(recipeDict, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AdvancedRecipeView(APIView):
     serializer_class = RecipeSerializer
@@ -139,7 +141,10 @@ class AdvancedRecipeView(APIView):
                 recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
                 recipeDict.append(RecipeSerializer(recipe).data)
                 
+        if len(recipeDict):
             return Response(recipeDict, status=status.HTTP_200_OK)
+        else:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
             
 class SaveRecipeView(APIView):
     serializer_class = RecipeSerializer
