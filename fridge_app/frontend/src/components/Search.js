@@ -23,7 +23,6 @@ import {
 	InputLabel,
 	FormControl,
 	Alert,
-	AlertTitle,
 } from '@mui/material';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
@@ -142,7 +141,7 @@ export default function Recipe({ setLike }) {
 					Authorization: 'Bearer ' + String(authTokens.access),
 				},
 				body: JSON.stringify({
-					id: value.id,
+					recipeID: value.id,
 				}),
 			});
 		}
@@ -171,16 +170,22 @@ export default function Recipe({ setLike }) {
 		setOpen(false);
 	};
 	return (
-		<Grid container spacing={4} align='center'>
-			<Grid item xs={12}>
-				<Button variant='contained' onClick={handleClickOpen}>
-					Advanced Search
-				</Button>
+		<Grid container spacing={4} align='center' justifyContent={'center'}>
+			<Grid item xs={6}>
+				{items.length === 0 ? (
+					<Alert severity='warning' align='center'>
+						Please add at least one item in your pantry.
+					</Alert>
+				) : (
+					<Button variant='contained' onClick={handleClickOpen}>
+						Advanced Search
+					</Button>
+				)}
+
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Advanced Search</DialogTitle>
 					{alert ? (
 						<Alert severity='error'>
-							<AlertTitle>Error</AlertTitle>
 							No recipes found, Try again with other options.
 						</Alert>
 					) : null}

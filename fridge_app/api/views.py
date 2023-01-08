@@ -157,7 +157,6 @@ class SaveRecipeView(APIView):
             recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
             recipe.save()
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
-        print(serializer.errors, serializer)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -165,13 +164,12 @@ class DeleteRecipeView(APIView):
     serializer_class = DeleteRecipeSerializer
     permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            id = serializer.data.get('id')
-            user = request.user
-            recipe_result = Recipe.objects.filter(recipeID=id, user=user)
-            if recipe_result.exists():
-                recipe_result[0].delete()
-                return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
-            return Response({'msg':'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        # serializer = self.serializer_class(data=request.data)
+        data = request.data
+        id = data.get('recipeID')
+        user = request.user
+        recipe_result = Recipe.objects.filter(recipeID=id, user=user)
+        if recipe_result.exists():
+            recipe_result[0].delete()
+            return Response({'msg':'Item deleted'}, status=status.HTTP_200_OK)
         return Response({'msg':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)

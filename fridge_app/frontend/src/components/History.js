@@ -54,7 +54,6 @@ export default function History({ like }) {
 
 	const handleDelete = async e => {
 		const value = JSON.parse(e.target.value);
-
 		const response = await fetch(`${URL}api/deleteRecipe`, {
 			method: 'POST',
 			headers: {
@@ -62,7 +61,7 @@ export default function History({ like }) {
 				Authorization: 'Bearer ' + String(authTokens.access),
 			},
 			body: JSON.stringify({
-				id: value.id,
+				recipeID: value.id,
 			}),
 		});
 
@@ -114,7 +113,7 @@ export default function History({ like }) {
 								<Button
 									color='error'
 									value={JSON.stringify({
-										id: history.id,
+										id: history.recipeID,
 									})}
 									onClick={handleDelete}
 									endIcon={<CancelRoundedIcon />}

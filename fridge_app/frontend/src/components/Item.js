@@ -15,7 +15,6 @@ import {
 	ListItem,
 	ListItemText,
 	Alert,
-	AlertTitle,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 const URL = config.url;
@@ -62,6 +61,7 @@ export default function Items({ setItems, items }) {
 
 	const handleDelete = async e => {
 		const id = e.target.value;
+		print(id);
 		const response = await fetch(`${URL}items/deleteItem`, {
 			method: 'POST',
 			headers: {
@@ -145,31 +145,24 @@ export default function Items({ setItems, items }) {
 				</Button>
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Add Item</DialogTitle>
-					{alert ? (
-						<Alert severity='error'>
-							<AlertTitle>Error</AlertTitle>
-							Item already exists.
-						</Alert>
-					) : null}
-					<DialogContent>
-						<Grid container spacing={1} align='center'>
-							<Stack
-								direction='row'
-								justifyContent='center'
-								alignItems='stretch'
-							>
-								<Grid item xs={5}>
-									<TextField
-										margin='normal'
-										required
-										label='Item'
-										placeholder='Item name'
-										value={name}
-										onChange={e => setName(e.target.value)}
-									/>
-								</Grid>
-							</Stack>
-						</Grid>
+					{alert ? <Alert severity='error'>Item already exists.</Alert> : null}
+					<DialogContent
+						sx={{
+							width: 400,
+							height: 100,
+						}}
+					>
+						<Stack direction='row' justifyContent='center'>
+							<TextField
+								margin='normal'
+								required
+								label='Item'
+								placeholder='Item name'
+								value={name}
+								sx={{ minWidth: 350 }}
+								onChange={e => setName(e.target.value)}
+							/>
+						</Stack>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose}>Cancel</Button>
