@@ -105,6 +105,7 @@ class AdvancedRecipeView(APIView):
                 'type': typeOfFood,
                 'cuisine': cuisine,
                 'diet': diet,
+                'sort': "max-used-ingredients",
                 'intolerance': intolerance,
                 'number': 4,
                 'ignorePantry': True,
