@@ -45,7 +45,6 @@ export default function Recipe({ setLike }) {
 	const [type, setType] = useState('');
 	const [diet, setDiet] = useState('');
 	const [open, setOpen] = useState(false);
-	const [alert, setAlert] = useState(false);
 
 	useEffect(() => {
 		const getItems = async () => {
@@ -60,8 +59,9 @@ export default function Recipe({ setLike }) {
 
 			if (response.status === 200) {
 				setItems(data);
-			} else if (response.status === 400) {
-				setAlert(true);
+			} else if (response.status === 401) {
+				alert('Please add at least one item in your pantry.');
+				// setAlert(true);
 			}
 		};
 		getItems();
