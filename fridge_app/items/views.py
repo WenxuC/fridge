@@ -16,6 +16,7 @@ class CreateItemView(APIView):
     serializer_class = ItemSerializer
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
+        
         if serializer.is_valid():
             name = serializer.data.get('name')
             user = request.user
