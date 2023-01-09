@@ -52,6 +52,7 @@ export default function Items({ setItems, items }) {
 	const handleClose = () => {
 		setOpen(false);
 		setName('');
+		setAlert(false);
 	};
 
 	const handleDelete = async e => {
@@ -74,14 +75,6 @@ export default function Items({ setItems, items }) {
 		}
 	};
 
-	const updateEdit = () => {
-		if (edit) {
-			setEdit(false);
-		} else {
-			setEdit(true);
-		}
-	};
-
 	const handleSubmit = async () => {
 		const response = await fetch(`${URL}items/createItem`, {
 			method: 'POST',
@@ -90,7 +83,7 @@ export default function Items({ setItems, items }) {
 				Authorization: 'Bearer ' + String(authTokens.access),
 			},
 			body: JSON.stringify({
-				name: name,
+				name: name.toUpperCase(),
 			}),
 		});
 		if (response.status === 201) {
