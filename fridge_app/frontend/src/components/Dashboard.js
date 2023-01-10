@@ -112,7 +112,7 @@ export default function Dashboard() {
 						centered
 					>
 						<Tab label='History' {...allProps(0)} />
-						<Tab label='Pantry' {...allProps(1)} />
+						<Tab label='Pantry' {...allProps(1)} />\
 						<Tab label='Search' {...allProps(2)} />
 						<Tab label='Advanced Search' {...allProps(3)} />
 					</Tabs>
@@ -123,6 +123,7 @@ export default function Dashboard() {
 				<TabPanel value={value} index={1}>
 					<Items setItems={setItems} items={items} />
 				</TabPanel>
+
 				<TabPanel value={value} index={2}>
 					<Recipe setLike={setLike} />
 				</TabPanel>

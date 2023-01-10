@@ -45,6 +45,7 @@ export default function Recipe({ setLike }) {
 	const [type, setType] = useState('');
 	const [diet, setDiet] = useState('');
 	const [open, setOpen] = useState(false);
+	const [alerts, setAlerts] = useState(false);
 
 	useEffect(() => {
 		const getItems = async () => {
@@ -59,13 +60,12 @@ export default function Recipe({ setLike }) {
 
 			if (response.status === 200) {
 				setItems(data);
-			} else if (response.status === 401) {
+			} else if (response.status === 400) {
 				alert('Please add at least one item in your pantry.');
-				// setAlert(true);
 			}
 		};
 		getItems();
-	}, [alert]);
+	}, [alerts]);
 
 	const intolerances = [
 		'Dairy',
@@ -100,11 +100,11 @@ export default function Recipe({ setLike }) {
 		const data = await response.json();
 		if (response.status === 200) {
 			setOpen(false);
-			setAlert(false);
+			setAlerts(false);
 			setRecipes(data);
 			setLoading(false);
 		} else if (response.status === 400) {
-			setAlert(true);
+			setAlerts(true);
 			setLoading(false);
 			setRecipes([]);
 		}
@@ -168,23 +168,18 @@ export default function Recipe({ setLike }) {
 
 	const handleClose = () => {
 		setOpen(false);
+		setAlerts(false);
 	};
 	return (
 		<Grid container spacing={4} align='center' justifyContent={'center'}>
 			<Grid item xs={6}>
-				{items.length === 0 ? (
-					<Alert severity='warning' align='center'>
-						Please add at least one item in your pantry.
-					</Alert>
-				) : (
-					<Button variant='contained' onClick={handleClickOpen}>
-						Advanced Search
-					</Button>
-				)}
+				<Button variant='contained' onClick={handleClickOpen}>
+					Advanced Search
+				</Button>
 
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Advanced Search</DialogTitle>
-					{alert ? (
+					{alerts ? (
 						<Alert severity='error'>
 							No recipes found, Try again with other options.
 						</Alert>
