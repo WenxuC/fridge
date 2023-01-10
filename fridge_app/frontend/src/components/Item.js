@@ -15,17 +15,43 @@ import {
 	ListItem,
 	ListItemText,
 	Alert,
+	Autocomplete,
+	InputAdornment,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import CircularProgress from '@mui/material/CircularProgress';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 const URL = config.url;
 
 export default function Items({ setItems, items }) {
 	const { authTokens, logoutUser } = useContext(AuthContext);
-	const [name, setName] = useState('');
+	const [name, setName] = useState(null);
 	const [updateList, setUpdateList] = useState(false);
-	const [edit, setEdit] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [alert, setAlert] = useState(false);
+	const [results, setResults] = useState([]);
+	const [openSearch, setOpenSearch] = useState(false);
+	const [inputValue, setInputValue] = useState('');
+
+	const loading = openSearch && results.length === 0;
+	useEffect(() => {
+		if (!openSearch) {
+			setResults([]);
+		}
+	}, [openSearch]);
+	useEffect(() => {
+		let active = true;
+
+		if (active) {
+			setResults([...results]);
+		}
+		if (!loading) {
+			return undefined;
+		}
+		return () => {
+			active = false;
+		};
+	}, [loading]);
 	useEffect(() => {
 		const getItems = async () => {
 			const response = await fetch(`${URL}items/getItems`, {
@@ -40,10 +66,16 @@ export default function Items({ setItems, items }) {
 			setItems(data);
 		};
 		getItems();
+
 		if (updateList) {
 			setUpdateList(false);
 		}
-	}, [updateList, edit, open, alert]);
+	}, [updateList, open, alert, results]);
+
+	const defaultProps = {
+		options: results,
+		getOptionLabel: option => option.name,
+	};
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -75,7 +107,7 @@ export default function Items({ setItems, items }) {
 		}
 	};
 
-	const handleSubmit = async () => {
+	const handleAddItem = async () => {
 		const response = await fetch(`${URL}items/createItem`, {
 			method: 'POST',
 			headers: {
@@ -83,7 +115,7 @@ export default function Items({ setItems, items }) {
 				Authorization: 'Bearer ' + String(authTokens.access),
 			},
 			body: JSON.stringify({
-				name: name.toUpperCase(),
+				name: name.name,
 			}),
 		});
 		if (response.status === 201) {
@@ -93,6 +125,32 @@ export default function Items({ setItems, items }) {
 			setAlert(false);
 		} else if (response.status === 400) {
 			setAlert(true);
+		}
+	};
+
+	const handleSubmit = async e => {
+		if (e.key === 'Enter') {
+			const response = await fetch(`${URL}items/autocompleteItem`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+				body: JSON.stringify({
+					name: inputValue,
+				}),
+			});
+			const data = await response.json();
+			if (response.status === 200) {
+				setResults(data);
+				console.log(results[0]);
+				// setUpdateList(true);
+				// setOpen(false);
+				// setName('');
+				// setAlert(false);
+			} else if (response.status === 400) {
+				setAlert(true);
+			}
 		}
 	};
 	return (
@@ -136,24 +194,64 @@ export default function Items({ setItems, items }) {
 					<DialogContent
 						sx={{
 							width: 400,
-							height: 100,
+							height: 300,
 						}}
 					>
-						<Stack direction='row' justifyContent='center'>
-							<TextField
-								margin='normal'
-								required
-								label='Item'
-								placeholder='Item name'
+						<Stack direction='column' justifyContent='center'>
+							<Autocomplete
+								onChange={(event, newValue) => {
+									setName(newValue);
+								}}
 								value={name}
-								sx={{ minWidth: 350 }}
-								onChange={e => setName(e.target.value)}
+								inputValue={inputValue}
+								onInputChange={(e, newInputValue) => {
+									setInputValue(newInputValue);
+								}}
+								sx={{ m: 1 }}
+								open={openSearch}
+								isOptionEqualToValue={(option, value) => {
+									option.name === value.name;
+								}}
+								onOpen={() => {
+									setOpenSearch(true);
+								}}
+								onClose={() => {
+									setOpenSearch(false);
+								}}
+								getOptionLabel={results => (results.name ? results.name : '')}
+								options={results}
+								loading={loading}
+								disableClearable
+								forcePopupIcon={false}
+								renderInput={params => (
+									<TextField
+										{...params}
+										InputProps={{
+											...params.InputProps,
+											startAdornment: (
+												<InputAdornment position='start'>
+													<SearchRoundedIcon />
+												</InputAdornment>
+											),
+											endAdornment: (
+												<React.Fragment>
+													{loading ? (
+														<CircularProgress color='inherit' size={20} />
+													) : null}
+													{params.InputProps.endAdornment}
+												</React.Fragment>
+											),
+										}}
+										label='Press enter to search'
+										onKeyDown={handleSubmit}
+									/>
+								)}
 							/>
 						</Stack>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose}>Cancel</Button>
-						<Button onClick={handleSubmit}>Add Item</Button>
+						<Button onClick={handleAddItem}>Add Item</Button>
 					</DialogActions>
 				</Dialog>
 			</Grid>

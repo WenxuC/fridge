@@ -1,15 +1,45 @@
 from django.shortcuts import render
+from .credentials import apiKey
 from .models import Items
+import string
 from django.contrib.auth.models import User
 from .serializer import ItemSerializer
+from requests import get
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+
 class ItemView(generics.ListAPIView):
     queryset = Items.objects.all()
     serializer_class = ItemSerializer
+
+class AutoCompleteItemView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+    def post(self, request, format=None):
+        name = request.data.get('name')
+        response = get("https://api.spoonacular.com/food/ingredients/autocomplete",
+            headers={
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey, 
+            },
+            params={
+                'query': name,
+                'number': 10,
+                'language': 'en',
+                'metaInformation': False,
+            }
+
+        ).json()
+        if len(response):
+            for i in range(len(response)):
+                response[i]['name'] = string.capwords(response[i].get('name'))
+            return Response(response, status=status.HTTP_200_OK)
+        else:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CreateItemView(APIView):
     permission_classes = [IsAuthenticated]
@@ -54,8 +84,6 @@ class UpdateItemView(APIView):
             serializer = self.serializer_class(data=request.data)
             if item_result.exists():
                 item = item_result[0]
-
-
                 item.name = name
                 item.save(update_fields=['name'])
                 return Response(ItemSerializer(item).data, status=status.HTTP_200_OK)  
