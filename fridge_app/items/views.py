@@ -38,8 +38,7 @@ class AutoCompleteItemView(APIView):
                 response[i]['name'] = string.capwords(response[i].get('name'))
             return Response(response, status=status.HTTP_200_OK)
         else:
-            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'Bad request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateItemView(APIView):
     permission_classes = [IsAuthenticated]

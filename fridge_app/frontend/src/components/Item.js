@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import {
@@ -28,17 +28,18 @@ export default function Items({ setItems, items }) {
 	const [name, setName] = useState(null);
 	const [updateList, setUpdateList] = useState(false);
 	const [open, setOpen] = useState(false);
-	const [alert, setAlert] = useState(false);
+	const [alert, setAlert] = useState('');
 	const [results, setResults] = useState([]);
 	const [openSearch, setOpenSearch] = useState(false);
 	const [inputValue, setInputValue] = useState('');
-
 	const loading = openSearch && results.length === 0;
+
 	useEffect(() => {
 		if (!openSearch) {
 			setResults([]);
 		}
 	}, [openSearch]);
+
 	useEffect(() => {
 		let active = true;
 
@@ -52,6 +53,7 @@ export default function Items({ setItems, items }) {
 			active = false;
 		};
 	}, [loading]);
+
 	useEffect(() => {
 		const getItems = async () => {
 			const response = await fetch(`${URL}items/getItems`, {
@@ -72,11 +74,6 @@ export default function Items({ setItems, items }) {
 		}
 	}, [updateList, open, alert, results]);
 
-	const defaultProps = {
-		options: results,
-		getOptionLabel: option => option.name,
-	};
-
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
@@ -84,7 +81,7 @@ export default function Items({ setItems, items }) {
 	const handleClose = () => {
 		setOpen(false);
 		setName('');
-		setAlert(false);
+		setAlert('');
 	};
 
 	const handleDelete = async e => {
@@ -118,17 +115,18 @@ export default function Items({ setItems, items }) {
 				name: name.name,
 			}),
 		});
+
 		if (response.status === 201) {
 			setUpdateList(true);
 			setOpen(false);
 			setName('');
-			setAlert(false);
+			setAlert('');
 		} else if (response.status === 400) {
-			setAlert(true);
+			setAlert('Item already exists');
 		}
 	};
 
-	const handleSubmit = async e => {
+	const handleSearch = async e => {
 		if (e.key === 'Enter') {
 			const response = await fetch(`${URL}items/autocompleteItem`, {
 				method: 'POST',
@@ -143,13 +141,8 @@ export default function Items({ setItems, items }) {
 			const data = await response.json();
 			if (response.status === 200) {
 				setResults(data);
-				console.log(results[0]);
-				// setUpdateList(true);
-				// setOpen(false);
-				// setName('');
-				// setAlert(false);
 			} else if (response.status === 400) {
-				setAlert(true);
+				setAlert('No search results');
 			}
 		}
 	};
@@ -174,7 +167,6 @@ export default function Items({ setItems, items }) {
 									</Button>
 								}
 							>
-								{' '}
 								<ListItemText primary={item.name} />
 							</ListItem>
 						))}
@@ -190,7 +182,7 @@ export default function Items({ setItems, items }) {
 				</Button>
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Add Item</DialogTitle>
-					{alert ? <Alert severity='error'>Item already exists.</Alert> : null}
+					{alert !== '' ? <Alert severity='error'>{alert}</Alert> : null}
 					<DialogContent
 						sx={{
 							width: 400,
@@ -234,16 +226,16 @@ export default function Items({ setItems, items }) {
 												</InputAdornment>
 											),
 											endAdornment: (
-												<React.Fragment>
+												<Fragment>
 													{loading ? (
 														<CircularProgress color='inherit' size={20} />
 													) : null}
 													{params.InputProps.endAdornment}
-												</React.Fragment>
+												</Fragment>
 											),
 										}}
 										label='Press enter to search'
-										onKeyDown={handleSubmit}
+										onKeyDown={handleSearch}
 									/>
 								)}
 							/>
