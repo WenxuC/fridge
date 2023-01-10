@@ -49,7 +49,6 @@ class GetRecipeView(APIView):
         for i in range(len(response)):
             title = response[i].get('title')
             id = response[i].get('id')
-            
             favorite = False
             recipe_result = Recipe.objects.filter(recipeID=id, user=request.user)
             if recipe_result.exists():
@@ -70,7 +69,6 @@ class GetRecipeView(APIView):
             source = responseSource.get('spoonacularSourceUrl')
             image = responseSource.get('image')
             summary = responseSource.get('summary')
-            
             recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         if len(recipeDict):
@@ -162,6 +160,7 @@ class SaveRecipeView(APIView):
             user = request.user
             recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
             recipe.save()
+            
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 

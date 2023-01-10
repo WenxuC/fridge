@@ -77,7 +77,7 @@ export default function Recipe({ setLike }) {
 
 	const handleChange = async e => {
 		const value = JSON.parse(e.target.value);
-
+		console.log(value);
 		setLike(value);
 		if (e.target.checked) {
 			await fetch(`${URL}api/saveRecipe`, {
@@ -90,6 +90,7 @@ export default function Recipe({ setLike }) {
 					recipeID: value.id,
 					title: value.title,
 					source: value.source,
+					summary: value.summary,
 					image: value.image,
 					favorite: true,
 				}),
@@ -176,6 +177,7 @@ export default function Recipe({ setLike }) {
 													title: item.title,
 													image: item.image,
 													source: item.source,
+													summary: item.summary,
 												})}
 											/>
 											<IconButton

@@ -147,7 +147,7 @@ export default function History({ like }) {
 								}}
 							>
 								<CardContent>
-									<div>{summary[0] ? console.log(summary[0]) : null}</div>
+									<div>{summary[0] ? summary[0].innerText : null}</div>
 								</CardContent>
 							</Collapse>
 						</Card>
