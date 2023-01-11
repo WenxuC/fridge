@@ -69,8 +69,6 @@ export default function History({ like }) {
 
 		if (response.status === 200) {
 			setUpdateList(true);
-		} else {
-			console.log(response.statusText);
 		}
 	};
 
