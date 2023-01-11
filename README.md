@@ -8,7 +8,7 @@ It is deployed on AWS EC2 using Nginx and Gunicorn
 
 
 ## Deployed Website
-[AWS Website](https://smart-billy.herokuapp.com/)
+[AWS Website](http://miseenplace.art/)
 
 # Owner
 [Wenxu Chen](https://github.com/WenxuC)  
