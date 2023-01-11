@@ -12,6 +12,7 @@ It is deployed on AWS EC2 using Nginx and Gunicorn
 
 ## Future features
 * Parse ingredients from receipt using OCR
+* Blacklist recipes from showing up in results
 
 ## Code owner
 [Wenxu Chen](https://github.com/WenxuC)  
