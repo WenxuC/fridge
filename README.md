@@ -7,8 +7,12 @@ This project utilizes React, JavaScript and Material-UI for the frontend and UI 
 It is deployed on AWS EC2 using Nginx and Gunicorn 
 
 
-## Deployed Website
+# Deployed Website
 [AWS Website](http://miseenplace.art/)
 
-# Owner
+## Future features
+* Parse ingredients from receipt using OCR
+
+## Code owner
 [Wenxu Chen](https://github.com/WenxuC)  
+
