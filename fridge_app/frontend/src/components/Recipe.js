@@ -145,7 +145,7 @@ export default function Recipe({ setLike }) {
 						{recipes.map((item, index) => (
 							<Grid item key={index} wrap='wrap-reverse'>
 								<Stack direction={'row'}>
-									<Paper elevation={2} variant='outlined'>
+									<Paper elevation={2}>
 										<Card
 											sx={{
 												height: '100%',
