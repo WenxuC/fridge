@@ -24,28 +24,34 @@ export default function Register() {
 	const navigate = useNavigate();
 	const [username, getUserName] = useState('');
 	const [password, getPassword] = useState('');
+	const [passwordConfirm, getPasswordConfirm] = useState('');
 	const [email, getEmail] = useState('');
 	const [error, getError] = useState('');
-
 	const handleSubmit = () => {
-		const body = {
-			username: username,
-			password: password,
-			email: email,
-		};
-		axios
-			.post(`${URL}account/register`, body)
-			.catch(function (error) {
-				if (error.response.status === 400) {
-					return getError('User or email already exists. Please try again.');
-				}
-			})
-			.then(response => {
-				if (response.status === 201) {
-					navigate('/login');
-				} else {
-				}
-			});
+		if (password !== passwordConfirm) {
+			getError('Password does not match.');
+			return;
+		} else {
+			getError('');
+			const body = {
+				username: username,
+				password: password,
+				email: email,
+			};
+			axios
+				.post(`${URL}account/register`, body)
+				.catch(function (error) {
+					if (error.response.status === 400) {
+						return getError('User or email already exists. Please try again.');
+					}
+				})
+				.then(response => {
+					if (response.status === 201) {
+						navigate('/login');
+					} else {
+					}
+				});
+		}
 	};
 
 	return (
@@ -119,6 +125,16 @@ export default function Register() {
 								label='Password'
 								value={password}
 								onChange={e => getPassword(e.target.value)}
+								type='password'
+								placeholder='Password'
+							/>
+							<TextField
+								margin='normal'
+								required
+								fullWidth
+								label='Confirm Password'
+								value={passwordConfirm}
+								onChange={e => getPasswordConfirm(e.target.value)}
 								type='password'
 								placeholder='Password'
 							/>
