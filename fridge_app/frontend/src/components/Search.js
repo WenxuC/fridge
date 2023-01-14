@@ -23,6 +23,9 @@ import {
 	InputLabel,
 	FormControl,
 	Alert,
+	Chip,
+	Divider,
+	Paper,
 } from '@mui/material';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
@@ -30,6 +33,8 @@ import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import CircularProgress from '@mui/material/CircularProgress';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 
 const URL = config.url;
 
@@ -39,7 +44,6 @@ export default function Recipe({ setLike }) {
 	const [loading, setLoading] = useState(false);
 	const [expanded, setExpanded] = useState(-1);
 	const [items, setItems] = useState([]);
-	const [summary, setSummary] = useState([]);
 	const [cuisine, setCuisine] = useState('');
 	const [intolerance, setIntolerance] = useState([]);
 	const [type, setType] = useState('');
@@ -130,6 +134,9 @@ export default function Recipe({ setLike }) {
 					title: value.title,
 					source: value.source,
 					image: value.image,
+					missing_ingredient_list: value.missing_ingredient_list,
+					time: value.time,
+					serving: value.serving,
 					favorite: true,
 				}),
 			});
@@ -276,75 +283,105 @@ export default function Recipe({ setLike }) {
 				{loading ? (
 					<CircularProgress />
 				) : (
-					<Grid container spacing={4}>
+					<Grid container spacing={2} justifyContent='center'>
 						{recipes.map((item, index) => (
-							<Grid item key={index} xs={12} sm={5} md={3}>
+							<Grid item key={index} wrap='wrap-reverse'>
 								<Stack direction={'row'}>
-									<Card
-										sx={{
-											height: '100%',
-											display: 'flex',
-											flexDirection: 'column',
-										}}
-									>
-										<CardHeader title={item.title} />
-										<CardMedia
-											component='img'
-											height='194'
-											image={item.image}
-										/>
-										<CardContent>
-											<Typography variant='body2' color='text.secondary'>
-												This impressive paella is a perfect party dish and a fun
-												meal to cook together with your guests. Add 1 cup of
-												frozen peas along with the mussels, if you like.
-											</Typography>
-										</CardContent>
-										<CardActions disableSpacing>
-											<Button
-												href={item.source}
-												target='_blank'
-												endIcon={<InsertLinkRoundedIcon />}
-											>
-												Link
-											</Button>
-											<Checkbox
-												defaultChecked={item.favorite}
-												icon={<FavoriteBorder />}
-												checkedIcon={<Favorite />}
-												onChange={handleChange}
-												value={JSON.stringify({
-													id: item.recipeID,
-													title: item.title,
-													image: item.image,
-													source: item.source,
-												})}
-											/>
-											<IconButton
-												onClick={() => handleExpandClick(index)}
-												aria-expanded={expanded === index}
-											>
-												Recipe
-												{expanded === index ? (
-													<ExpandLessRoundedIcon />
-												) : (
-													<ExpandMoreRoundedIcon />
-												)}
-											</IconButton>
-										</CardActions>
-										<Collapse
-											in={expanded === index}
-											timeout='auto'
-											unmountOnExit
-											addEndListener={() => {
-												setSummary(handleHTML(item.summary));
+									<Paper elevation={2} variant='outlined'>
+										<Card
+											sx={{
+												height: '100%',
+												display: 'flex',
+												flexDirection: 'column',
 											}}
+											style={{ backgroundColor: '#e0f7fa' }}
 										>
+											<CardHeader title={item.title} />
+											<CardMedia
+												component='img'
+												height='194'
+												image={item.image}
+											/>
 											<CardContent>
-												<div>{summary[0] ? summary[0].innerText : null}</div>
+												<Stack direction='row' spacing={1}>
+													<Chip
+														icon={<AccessTimeRoundedIcon />}
+														label={item.time}
+														color='primary'
+													/>
+													<Chip
+														icon={<PersonRoundedIcon />}
+														label={item.serving}
+														color='primary'
+													/>
+												</Stack>
 											</CardContent>
-										</Collapse>
-									</Card>
+											<CardActions disableSpacing>
+												<Button
+													href={item.source}
+													target='_blank'
+													endIcon={<InsertLinkRoundedIcon />}
+												>
+													Link
+												</Button>
+												<Checkbox
+													defaultChecked={item.favorite}
+													icon={<FavoriteBorder />}
+													checkedIcon={<Favorite />}
+													onChange={handleChange}
+													value={JSON.stringify({
+														id: item.recipeID,
+														title: item.title,
+														image: item.image,
+														source: item.source,
+														missing_ingredient_list:
+															item.missing_ingredient_list,
+														time: item.time,
+														serving: item.serving,
+													})}
+												/>
+												<IconButton
+													onClick={() => handleExpandClick(index)}
+													aria-expanded={expanded === index}
+												>
+													Ingredients
+													{expanded === index ? (
+														<ExpandLessRoundedIcon />
+													) : (
+														<ExpandMoreRoundedIcon />
+													)}
+												</IconButton>
+											</CardActions>
+											<Collapse
+												in={expanded === index}
+												timeout='auto'
+												unmountOnExit
+											>
+												<CardContent>
+													<div>
+														<Typography align='left' variant='h6'>
+															Missing ingredients
+														</Typography>
+														<Divider />
+														{item.missing_ingredient_list
+															.split(',')
+															.map((ingredients, index) => (
+																<Grid
+																	container
+																	spacing={4}
+																	align='left'
+																	key={index}
+																>
+																	<Grid item xs={12} key={index}>
+																		<Typography>{ingredients}</Typography>
+																	</Grid>
+																</Grid>
+															))}
+													</div>
+												</CardContent>
+											</Collapse>
+										</Card>
+									</Paper>
 								</Stack>
 							</Grid>
 						))}

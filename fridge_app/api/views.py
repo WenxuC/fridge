@@ -13,7 +13,6 @@ class GetHistoryView(APIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = RecipeSerializer
     def get(self, request, format=None):
-
         recipes = Recipe.objects.filter(user=request.user)
         if recipes.exists():
             recipeDict =[]
@@ -27,18 +26,19 @@ class GetRecipeView(APIView):
     serializer_class = RecipeSerializer
     def post(self, request, format=None):
         ingredients = request.data.get('ingredients')
-        ingredientsList = []
+        ingredientsSet = set()
         
         for data in ingredients:
-            ingredientsList.append(data['name'])
-        ingredientsList = ",".join(ingredientsList)
+            ingredientsSet.add(data['name'].lower())
+
+        ingredientsString = ",".join(ingredientsSet)
         response = get("https://api.spoonacular.com/recipes/findByIngredients", 
             headers={
                 'Content-Type': 'application/json',
                 'x-api-key': apiKey, 
             },
             params={
-                'ingredients': ingredientsList,
+                'ingredients': ingredientsString,
                 'number': 4,
                 'ignorePantry': True,
                 'ranking': 2
@@ -65,11 +65,19 @@ class GetRecipeView(APIView):
                     'includeNutrition': False
                 }
             ).json()
+            extendedIngredients = responseSource.get('extendedIngredients')
+            missing_ingredient_list = ""
+            for ingredients in extendedIngredients:
+                name = ingredients.get('nameClean')
+                if name not in ingredientsSet and name != None:
+                    missing_ingredient_list += name + ','
 
+            serving = responseSource.get('servings')
+            time = responseSource.get('readyInMinutes')
             source = responseSource.get('spoonacularSourceUrl')
             image = responseSource.get('image')
-            summary = responseSource.get('summary')
-            recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
+            
+            recipe = Recipe(title=title, recipeID=id, source=source, image=image, favorite=favorite, time=time, serving=serving, missing_ingredient_list=missing_ingredient_list, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         if len(recipeDict):
             return Response(recipeDict, status=status.HTTP_201_CREATED)
@@ -88,10 +96,11 @@ class AdvancedRecipeView(APIView):
         intolerance = ",".join(request.data.get('intolerance'))
         user = request.user
         ingredients = request.data.get('ingredients')
-        ingredientsList = []
+        ingredientsSet = set()
         for data in ingredients:
-            ingredientsList.append(data['name'])
-        ingredientsList = ",".join(ingredientsList)
+            ingredientsSet.add(data['name'].lower())
+
+        ingredientString = ",".join(ingredientsSet)
         
         response = get('https://api.spoonacular.com/recipes/complexSearch',
             headers={
@@ -99,7 +108,7 @@ class AdvancedRecipeView(APIView):
                 'x-api-key': apiKey, 
             },
             params={
-                'includeIngredients': ingredientsList,
+                'includeIngredients': ingredientString,
                 'type': typeOfFood,
                 'cuisine': cuisine,
                 'diet': diet,
@@ -107,12 +116,12 @@ class AdvancedRecipeView(APIView):
                 'intolerance': intolerance,
                 'number': 4,
                 'ignorePantry': True,
+                'fillIngredients': True
             }
         ).json()
         if response['totalResults'] == 0:
             return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            
             recipeDict = []
             for i in range(len(response['results'])):
                 title = response['results'][i]['title']
@@ -133,11 +142,18 @@ class AdvancedRecipeView(APIView):
                         'includeNutrition': False
                     }
                 ).json()
-
+                extendedIngredients = responseSource.get('extendedIngredients')
+                missing_ingredient_list = ""
+                for ingredients in extendedIngredients:
+                    name = ingredients.get('nameClean')
+                    if name not in ingredientsSet and name != None:
+                        missing_ingredient_list += name + ','
+                        
+                serving = responseSource.get('servings')
+                time = responseSource.get('readyInMinutes')
                 source = responseSource.get('spoonacularSourceUrl')
                 image = responseSource.get('image')
-                summary = responseSource.get('summary')
-                recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=request.user)
+                recipe = Recipe(title=title, recipeID=id, source=source, image=image, favorite=favorite, time=time, serving=serving, missing_ingredient_list=missing_ingredient_list, user=request.user)
                 recipeDict.append(RecipeSerializer(recipe).data)
                 
         if len(recipeDict):
@@ -151,14 +167,16 @@ class SaveRecipeView(APIView):
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            missing_ingredient_list = serializer.data.get('missing_ingredient_list')
+            serving = serializer.data.get('serving')
+            time = serializer.data.get('time')
             title = serializer.data.get('title')
             id = serializer.data.get('recipeID')
             source = serializer.data.get('source')
             image = serializer.data.get('image')
-            summary = serializer.data.get('summary')
             favorite = serializer.data.get('favorite')
             user = request.user
-            recipe = Recipe(title=title, recipeID=id, source=source, image=image, summary=summary, favorite=favorite, user=user )
+            recipe = Recipe(title=title, recipeID=id, source=source, image=image, favorite=favorite, serving=serving, time=time, missing_ingredient_list=missing_ingredient_list, user=user )
             recipe.save()
             
             return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
