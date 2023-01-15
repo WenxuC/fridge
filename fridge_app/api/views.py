@@ -7,6 +7,7 @@ from requests import get
 from .serializers import RecipeSerializer, DeleteRecipeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from random import sample
 
 
 class GetHistoryView(APIView):
@@ -39,44 +40,54 @@ class GetRecipeView(APIView):
             },
             params={
                 'ingredients': ingredientsString,
-                'number': 4,
+                'number': 50,
                 'ignorePantry': True,
                 'ranking': 2
             }
         ).json()
 
+        recipeSample = sample(response, 5)
         recipeDict = []
-        for i in range(len(response)):
-            title = response[i].get('title')
-            id = response[i].get('id')
+        id_list = []
+
+        for i in range(len(recipeSample)):
+            id_list.append(str(recipeSample[i].get('id')))
+        id_list = ",".join(id_list)
+
+        responseSource = get(f"https://api.spoonacular.com/recipes/informationBulk",
+            headers={
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+            },
+            params={
+                'ids': id_list,
+                'includeNutrition': False
+            }
+        ).json()
+        for i in range(len(responseSource)):
+            
             favorite = False
+            title = responseSource[i]['title']
+            id = responseSource[i]['id']
+
             recipe_result = Recipe.objects.filter(recipeID=id, user=request.user)
             if recipe_result.exists():
                 favorite = True
             else:
                 favorite = False
 
-            responseSource = get(f"https://api.spoonacular.com/recipes/{id}/information",
-                headers={
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                },
-                params={
-                    'includeNutrition': False
-                }
-            ).json()
-            extendedIngredients = responseSource.get('extendedIngredients')
+            extendedIngredients = responseSource[i]['extendedIngredients']
             missing_ingredient_list = ""
+            serving = responseSource[i]['servings']
+            time = responseSource[i]['readyInMinutes']
+            source = responseSource[i]['spoonacularSourceUrl']
+            image = responseSource[i]['image']
+              
             for ingredients in extendedIngredients:
                 name = ingredients.get('nameClean')
                 if name not in ingredientsSet and name != None:
                     missing_ingredient_list += name + ','
 
-            serving = responseSource.get('servings')
-            time = responseSource.get('readyInMinutes')
-            source = responseSource.get('spoonacularSourceUrl')
-            image = responseSource.get('image')
-            
             recipe = Recipe(title=title, recipeID=id, source=source, image=image, favorite=favorite, time=time, serving=serving, missing_ingredient_list=missing_ingredient_list, user=request.user)
             recipeDict.append(RecipeSerializer(recipe).data)
         if len(recipeDict):
@@ -114,7 +125,7 @@ class AdvancedRecipeView(APIView):
                 'diet': diet,
                 'sort': "max-used-ingredients",
                 'intolerance': intolerance,
-                'number': 4,
+                'number': 50,
                 'ignorePantry': True,
                 'fillIngredients': True
             }
@@ -123,36 +134,46 @@ class AdvancedRecipeView(APIView):
             return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             recipeDict = []
-            for i in range(len(response['results'])):
-                title = response['results'][i]['title']
-                id = response['results'][i]['id']
+            recipeSample = sample(response['results'], 5)
+            id_list = []
+
+            for i in range(len(recipeSample)):
+                id_list.append(str(recipeSample[i].get('id')))
+            id_list = ",".join(id_list)
+            
+            responseSource = get(f"https://api.spoonacular.com/recipes/informationBulk",
+                headers={
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                },
+                params={
+                    'ids': id_list,
+                    'includeNutrition': False
+                }
+            ).json()
+            for i in range(len(responseSource)):
                 favorite = False
+                title = responseSource[i]['title']
+                id = responseSource[i]['id']
+
                 recipe_result = Recipe.objects.filter(recipeID=id, user=request.user)
                 if recipe_result.exists():
                     favorite = True
                 else:
                     favorite = False
 
-                responseSource = get(f"https://api.spoonacular.com/recipes/{id}/information",
-                    headers={
-                        'Content-Type': 'application/json',
-                        'x-api-key': apiKey,
-                    },
-                    params={
-                        'includeNutrition': False
-                    }
-                ).json()
-                extendedIngredients = responseSource.get('extendedIngredients')
+                extendedIngredients = responseSource[i]['extendedIngredients']
                 missing_ingredient_list = ""
+                serving = responseSource[i]['servings']
+                time = responseSource[i]['readyInMinutes']
+                source = responseSource[i]['spoonacularSourceUrl']
+                image = responseSource[i]['image']
+                
                 for ingredients in extendedIngredients:
                     name = ingredients.get('nameClean')
                     if name not in ingredientsSet and name != None:
                         missing_ingredient_list += name + ','
-                        
-                serving = responseSource.get('servings')
-                time = responseSource.get('readyInMinutes')
-                source = responseSource.get('spoonacularSourceUrl')
-                image = responseSource.get('image')
+
                 recipe = Recipe(title=title, recipeID=id, source=source, image=image, favorite=favorite, time=time, serving=serving, missing_ingredient_list=missing_ingredient_list, user=request.user)
                 recipeDict.append(RecipeSerializer(recipe).data)
                 
