@@ -71,8 +71,8 @@ export default function Dashboard() {
 			<AppBar position='relative'>
 				<Toolbar>
 					<RestaurantMenuRoundedIcon sx={{ mr: 2 }} />
-					<Typography variant='h6'>THE FRIDGE</Typography>
-					<Container disableGutters={true} maxWidth='xl'>
+					<Typography variant='h6'>Mise En Place</Typography>
+					<Container disableGutters={true} maxWidth={false}>
 						<Stack direction='row' justifyContent='flex-end'>
 							<Button
 								type='submit'

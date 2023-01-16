@@ -283,9 +283,14 @@ export default function Recipe({ setLike }) {
 				{loading ? (
 					<CircularProgress />
 				) : (
-					<Grid container spacing={2} justifyContent='center'>
+					<Grid
+						container
+						spacing={2}
+						justifyContent='center'
+						wrap='wrap-reverse'
+					>
 						{recipes.map((item, index) => (
-							<Grid item key={index} wrap='wrap-reverse'>
+							<Grid item key={index}>
 								<Stack direction={'row'}>
 									<Paper elevation={2}>
 										<Card
@@ -306,12 +311,12 @@ export default function Recipe({ setLike }) {
 												<Stack direction='row' spacing={1}>
 													<Chip
 														icon={<AccessTimeRoundedIcon />}
-														label={item.time}
+														label={`Cook Time: ${item.time}`}
 														color='primary'
 													/>
 													<Chip
 														icon={<PersonRoundedIcon />}
-														label={item.serving}
+														label={`Servings: ${item.serving}`}
 														color='primary'
 													/>
 												</Stack>

@@ -81,9 +81,9 @@ export default function History({ like }) {
 	};
 
 	return (
-		<Grid container spacing={2} justifyContent='center'>
+		<Grid container spacing={2} justifyContent='center' wrap='wrap-reverse'>
 			{history.map((history, index) => (
-				<Grid item key={index} wrap='wrap-reverse'>
+				<Grid item key={index}>
 					<Stack direction={'row'}>
 						<Paper elevation={2}>
 							<Card
@@ -100,12 +100,12 @@ export default function History({ like }) {
 									<Stack direction='row' spacing={1}>
 										<Chip
 											icon={<AccessTimeRoundedIcon />}
-											label={history.time}
+											label={`Cook Time: ${history.time}`}
 											color='primary'
 										/>
 										<Chip
 											icon={<PersonRoundedIcon />}
-											label={history.serving}
+											label={`Servings: ${history.serving}`}
 											color='primary'
 										/>
 									</Stack>
