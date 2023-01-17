@@ -5,13 +5,14 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
+import Landing from './components/Landing';
 
 export default function App() {
 	return (
 		<Router>
 			<AuthProvider>
 				<Routes>
-					<Route path='/' element={<Login />} />
+					<Route path='/' element={<Landing />} />
 					<Route path='/dashboard' element={<Dashboard />} />
 					<Route path='/login' element={<Login />} />
 					<Route path='/register' element={<Register />} />
