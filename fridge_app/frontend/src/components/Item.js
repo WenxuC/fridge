@@ -19,13 +19,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 const URL = config.url;
 
-export default function Items({ setItems, items }) {
+export default function Items() {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [name, setName] = useState('');
 	const [updateList, setUpdateList] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [alert, setAlert] = useState('');
 	const [results, setResults] = useState([]);
+	const [items, setItems] = useState([]);
 	const [openSearch, setOpenSearch] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	const loading = openSearch && results.length === 0;
@@ -68,7 +69,7 @@ export default function Items({ setItems, items }) {
 		if (updateList) {
 			setUpdateList(false);
 		}
-	}, [updateList, open, alert, results]);
+	}, [updateList]);
 
 	const handleClose = () => {
 		setOpen(false);
@@ -78,6 +79,7 @@ export default function Items({ setItems, items }) {
 
 	const handleDelete = async e => {
 		const name = e.target.value;
+		console.log(name);
 		const response = await fetch(`${URL}items/deleteItem`, {
 			method: 'POST',
 			headers: {
@@ -200,7 +202,6 @@ export default function Items({ setItems, items }) {
 							<Button onClick={handleAddItem}>Add Item</Button>
 						</Stack>
 					</Grid>
-
 					{items.length > 0 ? (
 						<List
 							sx={{
@@ -213,19 +214,21 @@ export default function Items({ setItems, items }) {
 								'& ul': { padding: 0 },
 							}}
 						>
-							{items.map(item => (
+							{items.map(items => (
 								<ListItem
-									key={item.name}
+									key={items.name}
 									secondaryAction={
 										<Button
-											value={item.name}
+											value={items.name}
 											color='error'
 											onClick={handleDelete}
 											endIcon={<DeleteRoundedIcon />}
-										></Button>
+										>
+											{items.name}
+										</Button>
 									}
 								>
-									<ListItemText primary={item.name} />
+									<ListItemText primary={items.name} />
 								</ListItem>
 							))}
 						</List>
