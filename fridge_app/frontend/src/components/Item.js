@@ -77,26 +77,27 @@ export default function Items() {
 		setAlert('');
 	};
 
-	const handleDelete = async e => {
-		const name = e.target.value;
-		console.log(name);
-		const response = await fetch(`${URL}items/deleteItem`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + String(authTokens.access),
-			},
-			body: JSON.stringify({
-				name: name,
-			}),
-		});
+	function handleDeleteItem(ingredient) {
+		const handleDelete = async () => {
+			const response = await fetch(`${URL}items/deleteItem`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + String(authTokens.access),
+				},
+				body: JSON.stringify({
+					name: ingredient,
+				}),
+			});
 
-		if (response.status === 200) {
-			setUpdateList(true);
-		} else if (response.statusText === 'Unauthorized') {
-			logoutUser();
-		}
-	};
+			if (response.status === 200) {
+				setUpdateList(true);
+			} else if (response.statusText === 'Unauthorized') {
+				logoutUser();
+			}
+		};
+		handleDelete();
+	}
 
 	const handleAddItem = async () => {
 		const response = await fetch(`${URL}items/createItem`, {
@@ -117,6 +118,8 @@ export default function Items() {
 			setAlert('');
 		} else if (response.status === 400) {
 			setAlert('Item already exists');
+		} else if (response.status === 405) {
+			setAlert('Please enter an item');
 		}
 	};
 
@@ -221,10 +224,10 @@ export default function Items() {
 										<Button
 											value={items.name}
 											color='error'
-											onClick={handleDelete}
+											onClick={() => handleDeleteItem(items.name)}
 											endIcon={<DeleteRoundedIcon />}
 										>
-											{items.name}
+											{/* {items.name} */}
 										</Button>
 									}
 								>
