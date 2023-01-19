@@ -118,6 +118,8 @@ export default function Items() {
 			setAlert('');
 		} else if (response.status === 400) {
 			setAlert('Item already exists');
+		} else if (response.status === 405) {
+			setAlert('Please enter an item');
 		}
 	};
 

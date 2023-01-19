@@ -56,7 +56,8 @@ class CreateItemView(APIView):
                 item = Items(name=name, user=user)
                 item.save()
                 return Response(ItemSerializer(item).data, status=status.HTTP_201_CREATED)
-        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class GetItemView(APIView):
     permission_classes = [IsAuthenticated]
