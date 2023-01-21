@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from random import sample
 
-
 class GetHistoryView(APIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = RecipeSerializer
@@ -28,7 +27,6 @@ class GetRecipeView(APIView):
     def post(self, request, format=None):
         ingredients = request.data.get('ingredients')
         ingredientsSet = set()
-        
         for data in ingredients:
             ingredientsSet.add(data['name'].lower())
 
@@ -130,11 +128,15 @@ class AdvancedRecipeView(APIView):
                 'fillIngredients': True
             }
         ).json()
+        
         if response['totalResults'] == 0:
             return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             recipeDict = []
-            recipeSample = sample(response['results'], 5)
+            if response['totalResults'] < 5:
+                recipeSample = response['results']
+            else:
+                recipeSample = sample(response['results'], 5)
             id_list = []
 
             for i in range(len(recipeSample)):

@@ -118,7 +118,7 @@ export default function Dashboard() {
 					</Tabs>
 				</Box>
 				<TabPanel value={value} index={0}>
-					<History like={like} />
+					<History like={like} setLike={setLike} />
 				</TabPanel>
 				<TabPanel value={value} index={1}>
 					<Items setItems={setItems} items={items} />
