@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { config } from './Constants';
+import { cuisine_list, meal, diets, intolerances } from './dictionary/Filter';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
 import {
@@ -15,13 +16,16 @@ import {
 	InputLabel,
 	FormControl,
 	Alert,
+	Autocomplete,
+	TextField,
+	Box,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const URL = config.url;
 
 export default function Recipe({ setLike }) {
-	const { authTokens, logoutUser } = useContext(AuthContext);
+	const { authTokens } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [items, setItems] = useState([]);
@@ -31,6 +35,20 @@ export default function Recipe({ setLike }) {
 	const [diet, setDiet] = useState('');
 	const [open, setOpen] = useState(false);
 	const [alerts, setAlerts] = useState(false);
+
+	const defaultPropsCuisine = {
+		options: cuisine_list,
+		getOptionLabel: option => option,
+	};
+	const defaultPropsMeal = {
+		options: meal,
+		getOptionLabel: option => option,
+	};
+
+	const defaultPropsDiet = {
+		options: diets,
+		getOptionLabel: option => option,
+	};
 
 	useEffect(() => {
 		const getItems = async () => {
@@ -52,20 +70,6 @@ export default function Recipe({ setLike }) {
 		getItems();
 	}, [alerts]);
 
-	const intolerances = [
-		'Dairy',
-		'Egg',
-		'Gluten',
-		'Grain',
-		'Peanut',
-		'Seafood',
-		'Sesame',
-		'Shellfish',
-		'Soy',
-		'Sulfite',
-		'Tree Nut',
-		'Wheat',
-	];
 	const handleSearch = async () => {
 		setLoading(true);
 		const response = await fetch(`${URL}api/advancedRecipe`, {
@@ -133,72 +137,78 @@ export default function Recipe({ setLike }) {
 								justifyContent='center'
 								alignItems='stretch'
 							>
-								<Grid item xs={5}>
-									<FormControl sx={{ m: 1, minWidth: 200 }}>
-										<InputLabel>Cuisine</InputLabel>
-										<Select
+								<Grid item xs={12}>
+									<Box sx={{ minWidth: 350 }}>
+										<Autocomplete
+											{...defaultPropsCuisine}
+											clearOnEscape
+											id='cuisine-list'
 											value={cuisine}
-											label='Cuisine'
-											onChange={e => setCuisine(e.target.value)}
-										>
-											<MenuItem value=''>
-												<em>None</em>
-											</MenuItem>
-											<MenuItem value={'African'}>African</MenuItem>
-											<MenuItem value={'American'}>American</MenuItem>
-											<MenuItem value={'British'}>British</MenuItem>
-											<MenuItem value={'Cajun'}>Cajun</MenuItem>
-											<MenuItem value={'Caribbean'}>Caribbean</MenuItem>
-											<MenuItem value={'Chinese'}>Chinese</MenuItem>
-										</Select>
-									</FormControl>
-									<FormControl sx={{ m: 1, minWidth: 200 }}>
-										<InputLabel>Type</InputLabel>
-										<Select
+											onChange={(event, newValue) => {
+												setCuisine(newValue);
+											}}
+											renderInput={params => (
+												<TextField
+													{...params}
+													label='Cuisine'
+													variant='filled'
+													sx={{ m: 1, width: '25ch' }}
+												/>
+											)}
+										/>
+
+										<Autocomplete
+											{...defaultPropsMeal}
+											clearOnEscape
+											id='meal-list'
 											value={type}
-											label='Type'
-											onChange={e => setType(e.target.value)}
-										>
-											<MenuItem value=''>
-												<em>None</em>
-											</MenuItem>
-											<MenuItem value={'Breakfast'}>Breakfast</MenuItem>
-											<MenuItem value={'Lunch'}>Lunch</MenuItem>
-											<MenuItem value={'Dinner'}>Dinner</MenuItem>
-										</Select>
-									</FormControl>
-									<FormControl sx={{ m: 1, minWidth: 200 }}>
-										<InputLabel>Diet</InputLabel>
-										<Select
+											onChange={(event, newValue) => {
+												setType(newValue);
+											}}
+											renderInput={params => (
+												<TextField
+													{...params}
+													label='Meal'
+													variant='filled'
+													sx={{ m: 1, width: '25ch' }}
+												/>
+											)}
+										/>
+
+										<Autocomplete
+											{...defaultPropsDiet}
+											clearOnEscape
+											id='diet-list'
 											value={diet}
-											label='Diet'
-											onChange={e => setDiet(e.target.value)}
-										>
-											<MenuItem value=''>
-												<em>None</em>
-											</MenuItem>
-											<MenuItem value={'Vegetarian'}>Vegetarian</MenuItem>
-											<MenuItem value={'Vegan'}>Vegan</MenuItem>
-											<MenuItem value={'Ketogenic'}>Ketogenic</MenuItem>
-											<MenuItem value={'Gluten Free'}>Gluten Free</MenuItem>
-											<MenuItem value={'Pescetarian'}>Pescetarian</MenuItem>
-										</Select>
-									</FormControl>
-									<FormControl sx={{ m: 1, minWidth: 200, maxWidth: 200 }}>
-										<InputLabel>Intolerance</InputLabel>
-										<Select
-											value={intolerance}
-											label='Intolerance'
-											onChange={handleSelect}
-											multiple
-										>
-											{intolerances.map(name => (
-												<MenuItem key={name} value={name}>
-													{name}
-												</MenuItem>
-											))}
-										</Select>
-									</FormControl>
+											onChange={(event, newValue) => {
+												setDiet(newValue);
+											}}
+											renderInput={params => (
+												<TextField
+													{...params}
+													label='Diet'
+													variant='filled'
+													sx={{ m: 1, width: '25ch' }}
+												/>
+											)}
+										/>
+										<FormControl sx={{ m: 1, minWidth: 200, maxWidth: 200 }}>
+											<InputLabel>Intolerance</InputLabel>
+											<Select
+												value={intolerance}
+												label='Intolerance'
+												variant='filled'
+												onChange={handleSelect}
+												multiple
+											>
+												{intolerances.map(name => (
+													<MenuItem key={name} value={name}>
+														{name}
+													</MenuItem>
+												))}
+											</Select>
+										</FormControl>
+									</Box>
 								</Grid>
 							</Stack>
 						</Grid>
