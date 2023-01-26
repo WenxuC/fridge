@@ -17,6 +17,7 @@ import {
 	Chip,
 	Divider,
 	Paper,
+	ListItemSecondaryAction,
 } from '@mui/material';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -78,7 +79,7 @@ export default function Cards({ item, index, setLike }) {
 					display: 'flex',
 					flexDirection: 'column',
 				}}
-				style={{ backgroundColor: '#e0f7fa' }}
+				style={{ backgroundColor: '#c8e6c9' }}
 			>
 				<CardHeader title={item.title} />
 				<CardMedia component='img' height='194' image={item.image} />

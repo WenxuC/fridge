@@ -1,22 +1,9 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-// import '../App.css';
 
-import {
-	Button,
-	Typography,
-	AppBar,
-	Toolbar,
-	Stack,
-	Box,
-	Tab,
-	Tabs,
-	Container,
-	Grid,
-	CssBaseline,
-} from '@mui/material';
-import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+// import '../App.css';
+import Header from './Header';
+import { Typography, Box, Tab, Tabs, Container } from '@mui/material';
 import AuthContext from '../context/AuthContext';
 import Items from './Item';
 import Recipe from './Recipe';
@@ -56,7 +43,7 @@ function allProps(index) {
 	};
 }
 export default function Dashboard() {
-	const { user, logoutUser } = useContext(AuthContext);
+	const { user } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
 	const [like, setLike] = useState(true);
 	const [value, setValue] = useState(0);
@@ -67,31 +54,7 @@ export default function Dashboard() {
 
 	return (
 		<div>
-			<CssBaseline />
-			<AppBar position='relative'>
-				<Toolbar>
-					<RestaurantMenuRoundedIcon sx={{ mr: 2 }} />
-					<Typography variant='h6'>Mise En Place</Typography>
-					<Container disableGutters={true} maxWidth={false}>
-						<Stack direction='row' justifyContent='flex-end'>
-							<Button
-								type='submit'
-								color='error'
-								value='Logout'
-								size='small'
-								variant='contained'
-								onClick={logoutUser}
-							>
-								<LogoutRoundedIcon />
-							</Button>
-						</Stack>
-						<Grid container spacing={2}>
-							<Grid item xs={12}></Grid>
-						</Grid>
-					</Container>
-				</Toolbar>
-			</AppBar>
-
+			<Header />
 			<Container maxWidth='sm'>
 				<Typography
 					variant='h4'

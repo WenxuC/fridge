@@ -2,29 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
-import {
-	Grid,
-	IconButton,
-	Card,
-	CardHeader,
-	CardMedia,
-	CardContent,
-	CardActions,
-	Collapse,
-	Typography,
-	Button,
-	Stack,
-	Chip,
-	Divider,
-	Paper,
-} from '@mui/material';
-
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
-import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
-import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
-import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import { Grid, Stack } from '@mui/material';
 
 const URL = config.url;
 
