@@ -8,6 +8,8 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import Landing from './components/Landing';
+import About from './components/About';
+import Contact from './components/Contact';
 
 export default function App() {
 	return (
@@ -19,6 +21,8 @@ export default function App() {
 						<Route path='/dashboard' element={<Dashboard />} />
 						<Route path='/login' element={<Login />} />
 						<Route path='/register' element={<Register />} />
+						<Route path='/about' element={<About />} />
+						<Route path='/contact' element={<Contact />} />
 					</Routes>
 				</AuthProvider>
 			</Router>
