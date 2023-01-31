@@ -25,6 +25,15 @@ export default function Header() {
 					<Typography variant='h6'>Mise En Place</Typography>
 					<Container disableGutters={true} maxWidth={false}>
 						<Stack direction='row' justifyContent='flex-end'>
+							<Button href='/dashboard' sx={{ mr: 1 }}>
+								<Typography color='#fafafa'>Home</Typography>
+							</Button>
+							<Button href='/about' sx={{ mr: 1 }}>
+								<Typography color='#fafafa'>About</Typography>
+							</Button>
+							<Button href='/contact' sx={{ mr: 2 }}>
+								<Typography color='#fafafa'>Contact Us</Typography>
+							</Button>
 							<Button
 								type='submit'
 								color='error'

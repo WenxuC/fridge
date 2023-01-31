@@ -81,7 +81,9 @@ export default function Cards({ item, index, setLike }) {
 				}}
 				style={{ backgroundColor: '#c8e6c9' }}
 			>
-				<CardHeader title={item.title} />
+				<CardHeader
+					title={<Typography variant='h6'>{item.title}</Typography>}
+				/>
 				<CardMedia component='img' height='194' image={item.image} />
 				<CardContent>
 					<Stack direction='row' spacing={1}>
