@@ -72,14 +72,14 @@ export default function Cards({ item, index, setLike }) {
 		setExpanded(expanded === i ? -1 : i);
 	};
 	return (
-		<Paper elevation={2}>
+		<Paper elevation={12}>
 			<Card
 				sx={{
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
 				}}
-				style={{ backgroundColor: '#c8e6c9' }}
+				// style={{ backgroundColor: '#c8e6c9' }}
 			>
 				<CardHeader
 					title={<Typography variant='h6'>{item.title}</Typography>}

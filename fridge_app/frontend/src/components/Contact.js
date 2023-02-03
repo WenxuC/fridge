@@ -51,7 +51,7 @@ function Contact() {
 								required
 								multiline
 								fullWidth
-								rows={5}
+								rows={6}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
