@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
-import { Grid, Typography, TextField, Paper, Button, Box } from '@mui/material';
+import {
+	Grid,
+	Typography,
+	TextField,
+	Paper,
+	Button,
+	Box,
+	Alert,
+} from '@mui/material';
 import { Container } from '@mui/system';
 function Contact() {
+	const [submit, setSubmit] = useState(false);
+
+	const handleSubmit = () => {
+		// Send info to the backend
+		setSubmit(true);
+	};
+
 	return (
 		<div>
 			<Header />
@@ -14,7 +29,15 @@ function Contact() {
 					<Typography component='h1' variant='h4' align='center' sx={{ mb: 2 }}>
 						Contact Form
 					</Typography>
+
 					<Grid container spacing={3} justifyContent='center'>
+						<Grid item xs={12} sm={8}>
+							{submit ? (
+								<Alert severity='success'>
+									Success! Thank you for your feedback!
+								</Alert>
+							) : null}
+						</Grid>
 						<Grid item xs={12} sm={8}>
 							<TextField
 								variant='outlined'
@@ -56,7 +79,9 @@ function Contact() {
 						</Grid>
 						<Grid item xs={12} sm={8}>
 							<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-								<Button variant='contained'>Send</Button>
+								<Button variant='contained' onClick={handleSubmit}>
+									Send
+								</Button>
 							</Box>
 						</Grid>
 					</Grid>
