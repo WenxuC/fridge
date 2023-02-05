@@ -75,6 +75,8 @@ export default function Cards({ item, index, setLike }) {
 		<Paper elevation={12}>
 			<Card
 				sx={{
+					maxWidth: 300,
+
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
