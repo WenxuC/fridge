@@ -192,7 +192,7 @@ export default function Recipe({ setLike }) {
 												/>
 											)}
 										/>
-										<FormControl sx={{ m: 1, minWidth: 200, maxWidth: 200 }}>
+										<FormControl sx={{ m: 1, minWidth: 225, maxWidth: 225 }}>
 											<InputLabel>Intolerance</InputLabel>
 											<Select
 												value={intolerance}

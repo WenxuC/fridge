@@ -10,6 +10,10 @@ import Recipe from './Recipe';
 import History from './History';
 import Search from './Search';
 
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import TravelExploreRoundedIcon from '@mui/icons-material/TravelExploreRounded';
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
 
@@ -74,10 +78,23 @@ export default function Dashboard() {
 						aria-label='basic tabs example'
 						centered
 					>
-						<Tab label='History' {...allProps(0)} />
-						<Tab label='Pantry' {...allProps(1)} />\
-						<Tab label='Search' {...allProps(2)} />
-						<Tab label='Advanced Search' {...allProps(3)} />
+						<Tab
+							icon={<HistoryRoundedIcon />}
+							label='History'
+							{...allProps(0)}
+						/>
+						<Tab
+							icon={<Inventory2RoundedIcon />}
+							label='Pantry'
+							{...allProps(1)}
+						/>
+						\
+						<Tab icon={<SearchRoundedIcon />} label='Search' {...allProps(2)} />
+						<Tab
+							icon={<TravelExploreRoundedIcon />}
+							label='Advanced Search'
+							{...allProps(3)}
+						/>
 					</Tabs>
 				</Box>
 				<TabPanel value={value} index={0}>
