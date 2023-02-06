@@ -28,9 +28,9 @@ export default function Header() {
 							<Button href='/dashboard' sx={{ mr: 1 }}>
 								<Typography color='#fafafa'>Home</Typography>
 							</Button>
-							<Button href='/about' sx={{ mr: 1 }}>
+							{/* <Button href='/about' sx={{ mr: 1 }}>
 								<Typography color='#fafafa'>About</Typography>
-							</Button>
+							</Button> */}
 							<Button href='/contact' sx={{ mr: 2 }}>
 								<Typography color='#fafafa'>Contact Us</Typography>
 							</Button>
