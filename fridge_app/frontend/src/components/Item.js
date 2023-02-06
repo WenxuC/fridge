@@ -13,22 +13,25 @@ import {
 	Alert,
 	Autocomplete,
 	InputAdornment,
+	Box,
+	Paper,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+
 const URL = config.url;
 
 export default function Items() {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [name, setName] = useState('');
 	const [updateList, setUpdateList] = useState(false);
-	const [open, setOpen] = useState(false);
 	const [alert, setAlert] = useState('');
 	const [results, setResults] = useState([]);
 	const [items, setItems] = useState([]);
 	const [openSearch, setOpenSearch] = useState(false);
 	const [inputValue, setInputValue] = useState('');
+	const [edit, setEdit] = useState(false);
 	const loading = openSearch && results.length === 0;
 
 	useEffect(() => {
@@ -143,12 +146,25 @@ export default function Items() {
 			}
 		}
 	};
+
+	const handleEdit = () => {
+		if (edit) {
+			setEdit(false);
+		} else {
+			setEdit(true);
+		}
+	};
 	return (
 		<Grid container spacing={1} align='center'>
 			<Grid item xs={12}>
 				<Stack direction='row' justifyContent='center'>
 					<Grid item xs={3} md={3} lg={3}>
-						{alert !== '' ? <Alert severity='error'>{alert}</Alert> : null}
+						{alert !== '' ? (
+							<Alert sx={{ m: 2 }} severity='error'>
+								{alert}
+							</Alert>
+						) : null}
+
 						<Autocomplete
 							onChange={(event, newValue) => {
 								setName(newValue);
@@ -198,43 +214,71 @@ export default function Items() {
 								/>
 							)}
 						/>
+
 						<Stack direction='row' justifyContent='flex-start'>
-							<Button onClick={handleClose} color='error'>
-								Clear
+							<Button
+								variant='contained'
+								onClick={handleAddItem}
+								sx={{ ml: 2 }}
+							>
+								Add Item
 							</Button>
-							<Button onClick={handleAddItem}>Add Item</Button>
 						</Stack>
 					</Grid>
 					{items.length > 0 ? (
-						<List
-							sx={{
-								width: '100%',
-								maxWidth: 360,
-								bgcolor: 'background.paper',
-								position: 'relative',
-								overflow: 'auto',
-								maxHeight: 400,
-								'& ul': { padding: 0 },
-							}}
-						>
-							{items.map(items => (
-								<ListItem
-									key={items.name}
-									secondaryAction={
-										<Button
-											value={items.name}
-											color='error'
-											onClick={() => handleDeleteItem(items.name)}
-											endIcon={<DeleteRoundedIcon />}
-										>
-											{/* {items.name} */}
-										</Button>
-									}
+						<Box sx={{ minWidth: 300, mt: 2 }}>
+							<Paper elevation={12}>
+								<List
+									sx={{
+										width: '100%',
+										maxWidth: 360,
+										bgcolor: 'background.paper',
+										position: 'relative',
+										overflow: 'auto',
+										maxHeight: 400,
+										'& ul': { padding: 0 },
+									}}
 								>
-									<ListItemText primary={items.name} />
-								</ListItem>
-							))}
-						</List>
+									{items.map(items =>
+										edit ? (
+											<ListItem
+												key={items.name}
+												secondaryAction={
+													<Button
+														value={items.name}
+														color='error'
+														onClick={() => handleDeleteItem(items.name)}
+														endIcon={<DeleteRoundedIcon />}
+													></Button>
+												}
+											>
+												<ListItemText primary={items.name} />
+											</ListItem>
+										) : (
+											<ListItem key={items.name}>
+												<ListItemText primary={items.name} />
+											</ListItem>
+										)
+									)}
+								</List>
+								<Box display='flex' justifyContent='center'>
+									{edit ? (
+										<Button
+											variant='contained'
+											color='secondary'
+											onClick={handleEdit}
+											fullWidth
+										>
+											Done
+										</Button>
+									) : (
+										<Button variant='contained' onClick={handleEdit} fullWidth>
+											Edit
+										</Button>
+									)}
+								</Box>
+							</Paper>
+						</Box>
 					) : (
 						<Typography variant='h6'>Your Pantry Is Empty</Typography>
 					)}
