@@ -36,7 +36,7 @@ export default function History({ like, setLike }) {
 	}, [updateList]);
 
 	return (
-		<Grid container spacing={2} justifyContent='center' wrap='wrap-reverse'>
+		<Grid container spacing={2} justifyContent='center' wrap='wrap'>
 			{history.map((history, index) => (
 				<Grid item key={index}>
 					<Stack direction={'row'}>

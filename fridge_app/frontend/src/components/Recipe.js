@@ -67,12 +67,7 @@ export default function Recipe({ setLike }) {
 				{loading ? (
 					<CircularProgress />
 				) : (
-					<Grid
-						container
-						spacing={2}
-						justifyContent='center'
-						wrap='wrap-reverse'
-					>
+					<Grid container spacing={2} justifyContent='center' wrap='wrap'>
 						{recipes.map((item, index) => (
 							<Grid item key={index}>
 								<Stack direction={'row'}>
