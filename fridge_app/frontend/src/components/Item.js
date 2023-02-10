@@ -95,7 +95,7 @@ export default function Items() {
 
 			if (response.status === 200) {
 				setUpdateList(true);
-			} else if (response.statusText === 'Unauthorized') {
+			} else if (response.status == 401) {
 				logoutUser();
 			}
 		};

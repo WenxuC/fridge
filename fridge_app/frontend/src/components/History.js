@@ -7,7 +7,7 @@ import { Grid, Stack } from '@mui/material';
 const URL = config.url;
 
 export default function History({ like, setLike }) {
-	const { authTokens } = useContext(AuthContext);
+	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [history, setHistory] = useState([]);
 	const [updateList, setUpdateList] = useState([false]);
 
@@ -27,6 +27,8 @@ export default function History({ like, setLike }) {
 				setHistory(data);
 			} else if (response.status === 404) {
 				setHistory([]);
+			} else if (response.status == 401) {
+				logoutUser();
 			}
 		};
 		getHistory();
