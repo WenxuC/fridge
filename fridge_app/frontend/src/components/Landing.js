@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-
+import Header from './Header';
 // MUI
 import {
 	Typography,
@@ -12,6 +12,9 @@ import {
 	styled,
 } from '@mui/material';
 
+import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
+import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 const item = {
 	display: 'flex',
 	flexDirection: 'column',
@@ -32,15 +35,25 @@ const Root = styled('section')(({ theme }) => ({
 
 const Background = styled(Box)({
 	position: 'absolute',
-	left: 0,
-	right: 0,
-	top: 0,
+	display: 'flex',
+	left: -10,
+	right: -8,
+	top: -10,
 	bottom: 0,
 	backgroundSize: 'cover',
 	backgroundRepeat: 'no-repeat',
-	zIndex: -2,
+	zIndex: -1,
 });
 
+const Title = styled(Typography)(({ theme }) => ({
+	fontSize: '64px',
+	color: '#fafafa',
+	fontWeight: 'bold',
+	margin: theme.spacing(4, 0, 4, 0),
+	[theme.breakpoints.down('sm')]: {
+		fontSize: '40px',
+	},
+}));
 export default function Home() {
 	const navigate = useNavigate();
 
@@ -54,6 +67,7 @@ export default function Home() {
 
 	return (
 		<div>
+			<Header />
 			<Root>
 				<Container
 					sx={{
@@ -62,19 +76,19 @@ export default function Home() {
 						alignItems: 'center',
 					}}
 				>
-					<Typography
+					<Title
 						align='center'
 						variant='h3'
 						sx={{ mb: 4, mt: { sx: 4, sm: 10 } }}
 					>
 						Welcome to Mise En Place
-					</Typography>
+					</Title>
 
 					<Typography
-						color='inherit'
+						color='#fafafa'
 						align='center'
-						variant='h4'
-						sx={{ mb: 4, mt: { sx: 4, sm: 10 } }}
+						variant='h5'
+						sx={{ mb: 4 }}
 					>
 						Mise En Place prepares recipes based on your pantry so you can focus
 						on cooking!
@@ -83,7 +97,7 @@ export default function Home() {
 					<Background
 						sx={{
 							backgroundImage:
-								'url(https://images.unsplash.com/photo-1567769541715-8c71fe49fd43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Zm9vZHx8fHx8fDE2NzM5MjQwMjU&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080)',
+								'url(https://images.unsplash.com/photo-1627488193141-953623010488?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80)',
 							backgroundColor: t =>
 								t.palette.mode === 'light'
 									? t.palette.grey[50]
@@ -99,20 +113,20 @@ export default function Home() {
 					<Grid container spacing={5}>
 						<Grid item xs={12} md={4}>
 							<Box sx={item}>
-								<Typography variant='h5' align='center' sx={{ my: 5 }}>
-									Ease of Use
-								</Typography>
+								<Box sx={{ mb: '10px' }}>
+									<TouchAppOutlinedIcon fontSize='large' />
+								</Box>
 								<Typography variant='h6'>
-									To get started, add ingredients from your pantry and we will
-									generate recipes to maximize usage and reduce waste!
+									Add ingredients from your pantry and we will generate recipes
+									to maximize usage and reduce waste!
 								</Typography>
 							</Box>
 						</Grid>
 						<Grid item xs={12} md={4}>
 							<Box sx={item}>
-								<Typography variant='h5' align='center' sx={{ my: 5 }}>
-									Try New Things
-								</Typography>
+								<Box sx={{ mb: '10px' }}>
+									<TipsAndUpdatesOutlinedIcon fontSize='large' />
+								</Box>
 								<Typography variant='h6'>
 									Try specific cuisines with our advanced search or if you want
 									a surprise, use our quick search.
@@ -121,12 +135,12 @@ export default function Home() {
 						</Grid>
 						<Grid item xs={12} md={4}>
 							<Box sx={item}>
-								<Typography variant='h5' align='center' sx={{ my: 5 }}>
-									Save Your Recipes
-								</Typography>
+								<Box sx={{ mb: '10px' }}>
+									<FavoriteBorderOutlinedIcon fontSize='large' />
+								</Box>
 								<Typography variant='h6'>
-									You can save recipes you love and revisit them when you are
-									ready to cook!
+									Save recipes you love and revisit them when you are ready to
+									cook!
 								</Typography>
 							</Box>
 						</Grid>

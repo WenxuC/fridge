@@ -8,6 +8,7 @@ import {
 	Button,
 	Container,
 	Grid,
+	Link,
 } from '@mui/material';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -16,6 +17,7 @@ import AuthContext from '../context/AuthContext';
 export default function Header() {
 	const { logoutUser } = useContext(AuthContext);
 
+	const token = localStorage.getItem('authTokens');
 	return (
 		<div>
 			<CssBaseline />
@@ -31,19 +33,27 @@ export default function Header() {
 							{/* <Button href='/about' sx={{ mr: 1 }}>
 								<Typography color='#fafafa'>About</Typography>
 							</Button> */}
-							<Button href='/contact' sx={{ mr: 2 }}>
+							<Button href='/contact' sx={{ mr: 1 }}>
 								<Typography color='#fafafa'>Contact Us</Typography>
 							</Button>
-							<Button
-								type='submit'
-								color='error'
-								value='Logout'
-								size='small'
-								variant='contained'
-								onClick={logoutUser}
-							>
-								<LogoutRoundedIcon />
-							</Button>
+							{token ? (
+								<Button
+									type='submit'
+									color='error'
+									value='Logout'
+									size='small'
+									variant='contained'
+									onClick={logoutUser}
+								>
+									<LogoutRoundedIcon />
+								</Button>
+							) : (
+								<Link href='/login' variant='body2'>
+									<Button>
+										<Typography color='#fafafa'>Login</Typography>
+									</Button>
+								</Link>
+							)}
 						</Stack>
 						<Grid container spacing={2}>
 							<Grid item xs={12}></Grid>
