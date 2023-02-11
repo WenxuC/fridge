@@ -123,7 +123,7 @@ export default function Home() {
 								alignItems='center'
 								minHeight='20vh'
 							>
-								<Typography variant='h4'>
+								<Typography variant='h4' textAlign={'center'}>
 									Explore different recipes from around the world
 								</Typography>
 								<Typography variant='subtitle1'>
