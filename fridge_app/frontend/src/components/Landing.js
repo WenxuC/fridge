@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Header from './Header';
+import Footer from './Footer';
 // MUI
 import {
 	Typography,
@@ -10,6 +11,7 @@ import {
 	Container,
 	Box,
 	styled,
+	Stack,
 } from '@mui/material';
 
 import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
@@ -108,9 +110,32 @@ export default function Home() {
 				</Container>
 			</Root>
 
-			<Box component='section' sx={{ display: 'flex', overflow: 'hidden' }}>
+			<Box
+				component='section'
+				sx={{ display: 'flex', overflow: 'hidden', mb: '100px' }}
+			>
 				<Container sx={{ mt: 10, display: 'flex', position: 'relative' }}>
 					<Grid container spacing={5}>
+						<Grid item xs={12} md={12}>
+							<Stack
+								display='flex'
+								justifyContent='center'
+								alignItems='center'
+								minHeight='20vh'
+							>
+								<Typography variant='h4'>
+									Explore different recipes from around the world
+								</Typography>
+								<Typography variant='subtitle1'>
+									Over 5,000+ recipes and 2,600+ ingredients
+								</Typography>
+							</Stack>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<Stack display='flex' justifyContent='center' alignItems='center'>
+								<Typography variant='h5'>How Mise En Place Works</Typography>
+							</Stack>
+						</Grid>
 						<Grid item xs={12} md={4}>
 							<Box sx={item}>
 								<Box sx={{ mb: '10px' }}>
@@ -160,6 +185,7 @@ export default function Home() {
 					</Button>
 				</Grid>
 			</Grid>
+			<Footer />
 		</div>
 	);
 }
