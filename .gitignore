@@ -66,3 +66,5 @@ fridge_app/items/credentials.py
 fridge_app/db.sqlite3
 fridge_app/frontend/static/frontend/main.js
 fridge_app/frontend/static/frontend/main.js.LICENSE.txt
+fridge_app/frontend/static/frontend/main.js
+fridge_app/frontend/static/frontend/main.js.LICENSE.txt
