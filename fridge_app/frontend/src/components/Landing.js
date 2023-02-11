@@ -37,7 +37,7 @@ const Background = styled(Box)({
 	position: 'absolute',
 	display: 'flex',
 	left: -10,
-	right: -8,
+	right: 0,
 	top: -10,
 	bottom: 0,
 	backgroundSize: 'cover',
