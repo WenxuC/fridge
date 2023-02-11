@@ -11,11 +11,19 @@ import {
 } from '@mui/material';
 import { Container } from '@mui/system';
 function Contact() {
-	const [submit, setSubmit] = useState(false);
+	const [submit, setSubmit] = useState(null);
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [subject, setSubject] = useState('');
+	const [description, setDescription] = useState('');
 
 	const handleSubmit = () => {
 		// Send info to the backend
-		setSubmit(true);
+		if (name && email && subject && description) {
+			setSubmit(true);
+		} else {
+			alert('Please fill out all appropriate fields');
+		}
 	};
 
 	return (
@@ -45,6 +53,7 @@ function Contact() {
 								id='name'
 								label='Name'
 								fullWidth
+								onChange={e => setName(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
@@ -55,6 +64,7 @@ function Contact() {
 								name='email'
 								label='Email'
 								fullWidth
+								onChange={e => setEmail(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
@@ -65,6 +75,7 @@ function Contact() {
 								name='subject'
 								label='Subject'
 								fullWidth
+								onChange={e => setSubject(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
@@ -75,6 +86,7 @@ function Contact() {
 								multiline
 								fullWidth
 								rows={6}
+								onChange={e => setDescription(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
