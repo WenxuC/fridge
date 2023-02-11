@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // import '../App.css';
 import Header from './Header';
-import { Typography, Box, Tab, Tabs, Container } from '@mui/material';
+import { Typography, Box, Tab, Tabs, Container, styled } from '@mui/material';
 import AuthContext from '../context/AuthContext';
 import Items from './Item';
 import Recipe from './Recipe';
@@ -46,6 +46,30 @@ function allProps(index) {
 		'aria-controls': `simple-tabpanel-${index}`,
 	};
 }
+
+const AntTabs = styled(Tabs)({
+	borderBottom: '1px solid #e8e8e8',
+	'& .MuiTabs-indicator': {
+		backgroundColor: '#1b5e20',
+	},
+});
+
+const AntTab = styled(props => <Tab disableRipple {...props} />)(
+	({ theme }) => ({
+		minWidth: 0,
+		[theme.breakpoints.up('sm')]: {
+			minWidth: 0,
+		},
+		fontWeight: theme.typography.fontWeightRegular,
+		marginRight: theme.spacing(1),
+		color: 'rgba(0, 0, 0, 0.85)',
+		'&:hover': {
+			color: '#2e7d32',
+			opacity: 1,
+		},
+	})
+);
+
 export default function Dashboard() {
 	const { user } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
@@ -72,30 +96,34 @@ export default function Dashboard() {
 			</Container>
 			<Box sx={{ width: '100%' }}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-					<Tabs
+					<AntTabs
 						value={value}
 						onChange={handleChange}
 						aria-label='basic tabs example'
 						centered
 					>
-						<Tab
+						<AntTab
 							icon={<HistoryRoundedIcon />}
 							label='History'
 							{...allProps(0)}
 						/>
-						<Tab
+						<AntTab
 							icon={<Inventory2RoundedIcon />}
 							label='Pantry'
 							{...allProps(1)}
 						/>
 						\
-						<Tab icon={<SearchRoundedIcon />} label='Search' {...allProps(2)} />
-						<Tab
+						<AntTab
+							icon={<SearchRoundedIcon />}
+							label='Search'
+							{...allProps(2)}
+						/>
+						<AntTab
 							icon={<TravelExploreRoundedIcon />}
 							label='Advanced Search'
 							{...allProps(3)}
 						/>
-					</Tabs>
+					</AntTabs>
 				</Box>
 				<TabPanel value={value} index={0}>
 					<History like={like} setLike={setLike} />
