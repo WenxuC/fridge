@@ -25,7 +25,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 const URL = config.url;
 
 export default function Recipe({ setLike }) {
-	const { authTokens } = useContext(AuthContext);
+	const { authTokens, user } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [items, setItems] = useState([]);
@@ -51,23 +51,28 @@ export default function Recipe({ setLike }) {
 	};
 
 	useEffect(() => {
-		const getItems = async () => {
-			const response = await fetch(`${URL}items/getItems`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-			});
-			const data = await response.json();
+		if (user.username == 'guest') {
+			const storage = JSON.parse(localStorage.getItem('ingredients'));
+			setItems(storage['name']);
+		} else {
+			const getItems = async () => {
+				const response = await fetch(`${URL}items/getItems`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+				});
+				const data = await response.json();
 
-			if (response.status === 200) {
-				setItems(data);
-			} else if (response.status === 400) {
-				alert('Please add at least one item in your pantry.');
-			}
-		};
-		getItems();
+				if (response.status === 200) {
+					setItems(data);
+				} else if (response.status === 400) {
+					alert('Please add at least one item in your pantry.');
+				}
+			};
+			getItems();
+		}
 	}, [alerts]);
 
 	const handleSearch = async () => {
@@ -93,7 +98,6 @@ export default function Recipe({ setLike }) {
 			setRecipes(data);
 			setLoading(false);
 		} else {
-			console.log(response.status);
 			setAlerts(true);
 			setLoading(false);
 			setRecipes([]);

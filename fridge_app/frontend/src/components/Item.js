@@ -24,7 +24,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 const URL = config.url;
 
 export default function Items() {
-	const { authTokens, logoutUser } = useContext(AuthContext);
+	const { authTokens, logoutUser, user } = useContext(AuthContext);
 	const [name, setName] = useState('');
 	const [open, setOpen] = useState(false);
 	const [updateList, setUpdateList] = useState(false);
@@ -57,19 +57,26 @@ export default function Items() {
 	}, [loading]);
 
 	useEffect(() => {
-		const getItems = async () => {
-			const response = await fetch(`${URL}items/getItems`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-			});
+		if (user.username == 'guest') {
+			const storage = JSON.parse(localStorage.getItem('ingredients'));
+			if (storage != null) {
+				setItems(storage['name']);
+			}
+		} else {
+			const getItems = async () => {
+				const response = await fetch(`${URL}items/getItems`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+				});
 
-			const data = await response.json();
-			setItems(data);
-		};
-		getItems();
+				const data = await response.json();
+				setItems(data);
+			};
+			getItems();
+		}
 
 		if (updateList) {
 			setUpdateList(false);
@@ -83,50 +90,90 @@ export default function Items() {
 	};
 
 	function handleDeleteItem(ingredient) {
-		const handleDelete = async () => {
-			const response = await fetch(`${URL}items/deleteItem`, {
+		if (user.username == 'guest') {
+			const index = items.findIndex(item => item.name == ingredient);
+			items.splice(index, 1);
+			localStorage.setItem('ingredients', JSON.stringify({ name: items }));
+			if (items.length == 0) {
+				setEdit(false);
+			}
+			setUpdateList(true);
+		} else {
+			const handleDelete = async () => {
+				const response = await fetch(`${URL}items/deleteItem`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+					body: JSON.stringify({
+						name: ingredient,
+					}),
+				});
+
+				if (response.status === 200) {
+					setUpdateList(true);
+				} else if (response.status == 401) {
+					logoutUser();
+				}
+			};
+			handleDelete();
+		}
+	}
+
+	const handleAddItem = async () => {
+		if (user.username == 'guest') {
+			if (localStorage.getItem('ingredients') == undefined) {
+				const dict = { name: [] };
+				localStorage.setItem('ingredients', JSON.stringify(dict));
+			}
+			if (name.name != undefined) {
+				const storage = JSON.parse(localStorage.getItem('ingredients'));
+				const result = storage['name'].find(item => item.name == name.name);
+				if (result != null) {
+					setOpen(true);
+					setAlert('Item already exists');
+				} else {
+					storage['name'].push({
+						id: storage['name'].length,
+						name: name.name,
+						user: 'guest',
+					});
+					localStorage.setItem('ingredients', JSON.stringify(storage));
+					setItems(storage['name']);
+					setUpdateList(true);
+					setOpen(false);
+					setName('');
+					setAlert('');
+				}
+			} else if (name.name == undefined) {
+				setOpen(true);
+				setAlert('Please enter an item');
+			}
+		} else {
+			const response = await fetch(`${URL}items/createItem`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + String(authTokens.access),
 				},
 				body: JSON.stringify({
-					name: ingredient,
+					name: name.name,
 				}),
 			});
 
-			if (response.status === 200) {
+			if (response.status === 201) {
 				setUpdateList(true);
-			} else if (response.status == 401) {
-				logoutUser();
+				setOpen(false);
+				setName('');
+				setAlert('');
+			} else if (response.status === 400) {
+				setOpen(true);
+				setAlert('Item already exists');
+			} else if (response.status === 405) {
+				setOpen(true);
+				setAlert('Please enter an item');
 			}
-		};
-		handleDelete();
-	}
-
-	const handleAddItem = async () => {
-		const response = await fetch(`${URL}items/createItem`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + String(authTokens.access),
-			},
-			body: JSON.stringify({
-				name: name.name,
-			}),
-		});
-
-		if (response.status === 201) {
-			setUpdateList(true);
-			setOpen(false);
-			setName('');
-			setAlert('');
-		} else if (response.status === 400) {
-			setOpen(true);
-			setAlert('Item already exists');
-		} else if (response.status === 405) {
-			setOpen(true);
-			setAlert('Please enter an item');
 		}
 	};
 

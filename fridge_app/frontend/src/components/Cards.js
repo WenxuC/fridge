@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import { config } from './Constants';
 import {
@@ -17,7 +17,7 @@ import {
 	Chip,
 	Divider,
 	Paper,
-	ListItemSecondaryAction,
+	Modal,
 } from '@mui/material';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -30,13 +30,18 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 const URL = config.url;
 
 export default function Cards({ item, index, setLike }) {
-	const { authTokens } = useContext(AuthContext);
+	const { authTokens, user } = useContext(AuthContext);
 	const [expanded, setExpanded] = useState(-1);
+	const [modal, openModal] = useState(false);
+
+	useEffect(() => {}, [modal]);
+
 	const handleChange = async e => {
 		const value = JSON.parse(e.target.value);
-		console.log(value);
 		setLike(value);
-		if (e.target.checked) {
+		if (e.target.checked && user.username == 'guest') {
+			openModal(true);
+		} else if (e.target.checked) {
 			await fetch(`${URL}api/saveRecipe`, {
 				method: 'POST',
 				headers: {

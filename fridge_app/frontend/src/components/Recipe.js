@@ -2,35 +2,36 @@ import React, { useState, useContext, useEffect } from 'react';
 import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
-import { Grid, Button, Stack } from '@mui/material';
+import { Grid, Button, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const URL = config.url;
 
 export default function Recipe({ setLike }) {
-	const { authTokens } = useContext(AuthContext);
+	const { authTokens, user } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [items, setItems] = useState([]);
 
 	useEffect(() => {
-		const getItems = async () => {
-			const response = await fetch(`${URL}items/getItems`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-			});
-			const data = await response.json();
+		if (user.username == 'guest') {
+			const storage = JSON.parse(localStorage.getItem('ingredients'));
+			setItems(storage['name']);
+		} else {
+			const getItems = async () => {
+				const response = await fetch(`${URL}items/getItems`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+				});
 
-			if (response.status === 200) {
+				const data = await response.json();
 				setItems(data);
-			} else if (response.status === 400) {
-				alert('Please add at least one item in your pantry.');
-			}
-		};
-		getItems();
+			};
+			getItems();
+		}
 	}, []);
 
 	const handleOnClick = async () => {
@@ -78,6 +79,7 @@ export default function Recipe({ setLike }) {
 					</Grid>
 				)}
 			</Grid>
+			<Typography>{like}</Typography>
 		</Grid>
 	);
 }

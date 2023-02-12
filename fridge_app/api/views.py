@@ -44,6 +44,9 @@ class GetRecipeView(APIView):
             }
         ).json()
 
+        if len(response) == 0:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
+            
         recipeSample = sample(response, 5)
         recipeDict = []
         id_list = []
