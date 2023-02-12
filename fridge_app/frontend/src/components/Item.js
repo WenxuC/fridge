@@ -15,17 +15,18 @@ import {
 	InputAdornment,
 	Box,
 	Paper,
+	Snackbar,
 } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { maxHeight } from '@mui/system';
 
 const URL = config.url;
 
 export default function Items() {
 	const { authTokens, logoutUser } = useContext(AuthContext);
 	const [name, setName] = useState('');
+	const [open, setOpen] = useState(false);
 	const [updateList, setUpdateList] = useState(false);
 	const [alert, setAlert] = useState('');
 	const [results, setResults] = useState([]);
@@ -121,8 +122,10 @@ export default function Items() {
 			setName('');
 			setAlert('');
 		} else if (response.status === 400) {
+			setOpen(true);
 			setAlert('Item already exists');
 		} else if (response.status === 405) {
+			setOpen(true);
 			setAlert('Please enter an item');
 		}
 	};
@@ -157,11 +160,24 @@ export default function Items() {
 	};
 	return (
 		<div>
-			{alert !== '' ? (
-				<Alert sx={{ m: 2 }} severity='error'>
-					{alert}
-				</Alert>
-			) : null}
+			<Stack direction='row' justifyContent={'center'}>
+				{open !== '' ? (
+					<Snackbar
+						open={open}
+						autoHideDuration={5000}
+						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+						onClose={handleClose}
+					>
+						<Alert
+							sx={{ minWidth: 370, maxWidth: 360 }}
+							severity='error'
+							onClose={handleClose}
+						>
+							{alert}
+						</Alert>
+					</Snackbar>
+				) : null}
+			</Stack>
 			<Stack direction='row' justifyContent={'center'}>
 				<Autocomplete
 					onChange={(event, newValue) => {
@@ -187,7 +203,7 @@ export default function Items() {
 					loading={loading}
 					disableClearable
 					forcePopupIcon={false}
-					sx={{ m: 2, minWidth: 250, maxWidth: 360 }}
+					sx={{ mr: 2, mt: 5, minWidth: 250, maxWidth: 360 }}
 					renderInput={params => (
 						<TextField
 							{...params}
@@ -216,7 +232,7 @@ export default function Items() {
 				<Button
 					variant='contained'
 					onClick={handleAddItem}
-					sx={{ mt: 2, maxHeight: 55 }}
+					sx={{ mt: 5, maxHeight: 55 }}
 				>
 					Add Item
 				</Button>
