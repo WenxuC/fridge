@@ -131,87 +131,77 @@ export default function Recipe({ setLike }) {
 					) : null}
 
 					<DialogContent>
-						<Grid container align='center'>
-							<Stack
-								direction='row'
-								justifyContent='center'
-								alignItems='stretch'
-							>
-								<Grid item xs={12}>
-									<Box sx={{ minWidth: 350 }}>
-										<Autocomplete
-											{...defaultPropsCuisine}
-											clearOnEscape
-											id='cuisine-list'
-											value={cuisine}
-											onChange={(event, newValue) => {
-												setCuisine(newValue);
-											}}
-											renderInput={params => (
-												<TextField
-													{...params}
-													label='Cuisine'
-													variant='filled'
-													sx={{ m: 1, width: '25ch' }}
-												/>
-											)}
-										/>
+						<Stack
+							direction='column'
+							alignItems='center'
+							sx={{ minWidth: 360, maxWidth: 400 }}
+						>
+							<Autocomplete
+								{...defaultPropsCuisine}
+								clearOnEscape
+								id='cuisine-list'
+								value={cuisine}
+								onChange={(event, newValue) => {
+									setCuisine(newValue);
+								}}
+								renderInput={params => (
+									<TextField
+										{...params}
+										label='Cuisine'
+										sx={{ m: 1, width: '40ch' }}
+									/>
+								)}
+							/>
 
-										<Autocomplete
-											{...defaultPropsMeal}
-											clearOnEscape
-											id='meal-list'
-											value={type}
-											onChange={(event, newValue) => {
-												setType(newValue);
-											}}
-											renderInput={params => (
-												<TextField
-													{...params}
-													label='Meal'
-													variant='filled'
-													sx={{ m: 1, width: '25ch' }}
-												/>
-											)}
-										/>
+							<Autocomplete
+								{...defaultPropsMeal}
+								clearOnEscape
+								id='meal-list'
+								value={type}
+								onChange={(event, newValue) => {
+									setType(newValue);
+								}}
+								renderInput={params => (
+									<TextField
+										{...params}
+										label='Meal'
+										sx={{ m: 1, width: '40ch' }}
+									/>
+								)}
+							/>
 
-										<Autocomplete
-											{...defaultPropsDiet}
-											clearOnEscape
-											id='diet-list'
-											value={diet}
-											onChange={(event, newValue) => {
-												setDiet(newValue);
-											}}
-											renderInput={params => (
-												<TextField
-													{...params}
-													label='Diet'
-													variant='filled'
-													sx={{ m: 1, width: '25ch' }}
-												/>
-											)}
-										/>
-										<FormControl sx={{ m: 1, minWidth: 225, maxWidth: 225 }}>
-											<InputLabel>Intolerance</InputLabel>
-											<Select
-												value={intolerance}
-												label='Intolerance'
-												variant='filled'
-												onChange={handleSelect}
-												multiple
-											>
-												{intolerances.map(name => (
-													<MenuItem key={name} value={name}>
-														{name}
-													</MenuItem>
-												))}
-											</Select>
-										</FormControl>
-									</Box>
-								</Grid>
-							</Stack>
-						</Grid>
+							<Autocomplete
+								{...defaultPropsDiet}
+								clearOnEscape
+								id='diet-list'
+								value={diet}
+								onChange={(event, newValue) => {
+									setDiet(newValue);
+								}}
+								renderInput={params => (
+									<TextField
+										{...params}
+										label='Diet'
+										sx={{ m: 1, width: '40ch' }}
+									/>
+								)}
+							/>
+							<FormControl sx={{ m: 1, width: '40ch' }}>
+								<InputLabel>Intolerance</InputLabel>
+								<Select
+									value={intolerance}
+									label='Intolerance'
+									onChange={handleSelect}
+									multiple
+								>
+									{intolerances.map(name => (
+										<MenuItem key={name} value={name}>
+											{name}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</Stack>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose}>Cancel</Button>
