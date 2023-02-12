@@ -62,8 +62,9 @@ export const AuthProvider = ({ children }) => {
 		const data = await response.json();
 		if (response.status === 200) {
 			setUser(jwt_decode(data.access));
-			setAuthTokens(data);
 			localStorage.setItem('authTokens', JSON.stringify(data));
+			setAuthTokens(data);
+
 			navigate('/dashboard');
 		} else {
 			alert('Something went wrong!');
@@ -74,6 +75,7 @@ export const AuthProvider = ({ children }) => {
 		setAuthTokens(null);
 		setUser(null);
 		localStorage.removeItem('authTokens');
+		localStorage.removeItem('ingredients');
 		navigate('/login');
 	};
 

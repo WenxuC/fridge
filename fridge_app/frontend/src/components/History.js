@@ -31,6 +31,23 @@ export default function History({ like, setLike }) {
 				logoutUser();
 			}
 		};
+
+		if (localStorage.getItem('ingredients') != undefined) {
+			const storage = JSON.parse(localStorage.getItem('ingredients'));
+			storage['name'].map(async item => {
+				const response = await fetch(`${URL}items/createItem`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+					body: JSON.stringify({
+						name: item.name,
+					}),
+				});
+			});
+			localStorage.removeItem('ingredients');
+		}
 		getHistory();
 		if (updateList) {
 			setUpdateList(false);
