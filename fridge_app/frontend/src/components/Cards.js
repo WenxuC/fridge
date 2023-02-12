@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { config } from './Constants';
 import {
@@ -17,7 +17,6 @@ import {
 	Chip,
 	Divider,
 	Paper,
-	Modal,
 } from '@mui/material';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -29,47 +28,46 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 
 const URL = config.url;
 
-export default function Cards({ item, index, setLike }) {
+export default function Cards({ item, index, setLike, setModal }) {
 	const { authTokens, user } = useContext(AuthContext);
 	const [expanded, setExpanded] = useState(-1);
-	const [modal, openModal] = useState(false);
-
-	useEffect(() => {}, [modal]);
 
 	const handleChange = async e => {
 		const value = JSON.parse(e.target.value);
-		setLike(value);
-		if (e.target.checked && user.username == 'guest') {
-			openModal(true);
-		} else if (e.target.checked) {
-			await fetch(`${URL}api/saveRecipe`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-				body: JSON.stringify({
-					recipeID: value.id,
-					title: value.title,
-					source: value.source,
-					image: value.image,
-					missing_ingredient_list: value.missing_ingredient_list,
-					time: value.time,
-					serving: value.serving,
-					favorite: true,
-				}),
-			});
+		if (user.username == 'guest') {
+			setModal(true);
 		} else {
-			await fetch(`${URL}api/deleteRecipe`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-				body: JSON.stringify({
-					recipeID: value.id,
-				}),
-			});
+			setLike(value);
+			if (e.target.checked) {
+				await fetch(`${URL}api/saveRecipe`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+					body: JSON.stringify({
+						recipeID: value.id,
+						title: value.title,
+						source: value.source,
+						image: value.image,
+						missing_ingredient_list: value.missing_ingredient_list,
+						time: value.time,
+						serving: value.serving,
+						favorite: true,
+					}),
+				});
+			} else {
+				await fetch(`${URL}api/deleteRecipe`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+					body: JSON.stringify({
+						recipeID: value.id,
+					}),
+				});
+			}
 		}
 	};
 
@@ -110,7 +108,13 @@ export default function Cards({ item, index, setLike }) {
 					<Checkbox
 						defaultChecked={item.favorite}
 						icon={<FavoriteBorder />}
-						checkedIcon={<Favorite style={{ color: 'red' }} />}
+						checkedIcon={
+							user.username == 'guest' ? (
+								<Favorite style={{ color: 'grey' }} />
+							) : (
+								<Favorite style={{ color: 'red' }} />
+							)
+						}
 						onChange={handleChange}
 						value={JSON.stringify({
 							id: item.recipeID,

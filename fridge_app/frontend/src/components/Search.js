@@ -3,6 +3,8 @@ import { config } from './Constants';
 import { cuisine_list, meal, diets, intolerances } from './dictionary/Filter';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
+import Modals from './Modals';
+
 import {
 	Grid,
 	Button,
@@ -18,13 +20,12 @@ import {
 	Alert,
 	Autocomplete,
 	TextField,
-	Box,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const URL = config.url;
 
-export default function Recipe({ setLike }) {
+export default function Recipe({ setLike, setModal, modal }) {
 	const { authTokens, user } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -221,12 +222,18 @@ export default function Recipe({ setLike }) {
 						{recipes.map((item, index) => (
 							<Grid item key={index}>
 								<Stack direction={'row'}></Stack>
-								<Cards item={item} index={index} setLike={setLike} />
+								<Cards
+									item={item}
+									index={index}
+									setLike={setLike}
+									setModal={setModal}
+								/>
 							</Grid>
 						))}
 					</Grid>
 				)}
 			</Grid>
+			<Modals modal={modal} setModal={setModal} />
 		</Grid>
 	);
 }

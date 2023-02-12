@@ -108,7 +108,6 @@ class AdvancedRecipeView(APIView):
         intolerance = ",".join(request.data.get('intolerance'))
         ingredients = request.data.get('ingredients')
         ingredientsSet = set()
-        print(request.data)
         for data in ingredients:
             ingredientsSet.add(data['name'].lower())
         ingredientString = ",".join(ingredientsSet)

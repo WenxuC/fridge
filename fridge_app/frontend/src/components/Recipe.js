@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
-import { Grid, Button, Stack, Typography } from '@mui/material';
+import Modals from './Modals';
+
+import { Grid, Button, Stack } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const URL = config.url;
 
-export default function Recipe({ setLike }) {
+export default function Recipe({ setLike, setModal, modal }) {
 	const { authTokens, user } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -72,14 +74,19 @@ export default function Recipe({ setLike }) {
 						{recipes.map((item, index) => (
 							<Grid item key={index}>
 								<Stack direction={'row'}>
-									<Cards item={item} index={index} setLike={setLike} />
+									<Cards
+										item={item}
+										index={index}
+										setLike={setLike}
+										setModal={setModal}
+									/>
 								</Stack>
 							</Grid>
 						))}
 					</Grid>
 				)}
 			</Grid>
-			<Typography>{like}</Typography>
+			<Modals modal={modal} setModal={setModal} />
 		</Grid>
 	);
 }
