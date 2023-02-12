@@ -19,6 +19,7 @@ import {
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { maxHeight } from '@mui/system';
 
 const URL = config.url;
 
@@ -155,135 +156,130 @@ export default function Items() {
 		}
 	};
 	return (
-		<Grid container spacing={1} align='center'>
-			<Grid item xs={12}>
-				<Stack direction='row' justifyContent='center'>
-					<Grid item xs={3} md={3} lg={3}>
-						{alert !== '' ? (
-							<Alert sx={{ m: 2 }} severity='error'>
-								{alert}
-							</Alert>
-						) : null}
-
-						<Autocomplete
-							onChange={(event, newValue) => {
-								setName(newValue);
+		<div>
+			{alert !== '' ? (
+				<Alert sx={{ m: 2 }} severity='error'>
+					{alert}
+				</Alert>
+			) : null}
+			<Stack direction='row' justifyContent={'center'}>
+				<Autocomplete
+					onChange={(event, newValue) => {
+						setName(newValue);
+					}}
+					value={name}
+					onInputChange={(e, newInputValue) => {
+						setInputValue(newInputValue);
+					}}
+					inputValue={inputValue}
+					open={openSearch}
+					isOptionEqualToValue={(option, value) => {
+						option.name === value.name;
+					}}
+					onOpen={() => {
+						setOpenSearch(true);
+					}}
+					onClose={() => {
+						setOpenSearch(false);
+					}}
+					getOptionLabel={results => (results.name ? results.name : '')}
+					options={results}
+					loading={loading}
+					disableClearable
+					forcePopupIcon={false}
+					sx={{ m: 2, minWidth: 250, maxWidth: 360 }}
+					renderInput={params => (
+						<TextField
+							{...params}
+							InputProps={{
+								...params.InputProps,
+								startAdornment: (
+									<InputAdornment position='start'>
+										<SearchRoundedIcon />
+									</InputAdornment>
+								),
+								endAdornment: (
+									<Fragment>
+										{loading ? (
+											<CircularProgress color='inherit' size={20} />
+										) : null}
+										{params.InputProps.endAdornment}
+									</Fragment>
+								),
 							}}
-							value={name}
-							onInputChange={(e, newInputValue) => {
-								setInputValue(newInputValue);
-							}}
-							inputValue={inputValue}
-							open={openSearch}
-							isOptionEqualToValue={(option, value) => {
-								option.name === value.name;
-							}}
-							onOpen={() => {
-								setOpenSearch(true);
-							}}
-							onClose={() => {
-								setOpenSearch(false);
-							}}
-							getOptionLabel={results => (results.name ? results.name : '')}
-							options={results}
-							loading={loading}
-							disableClearable
-							forcePopupIcon={false}
-							sx={{ m: 2 }}
-							renderInput={params => (
-								<TextField
-									{...params}
-									InputProps={{
-										...params.InputProps,
-										startAdornment: (
-											<InputAdornment position='start'>
-												<SearchRoundedIcon />
-											</InputAdornment>
-										),
-										endAdornment: (
-											<Fragment>
-												{loading ? (
-													<CircularProgress color='inherit' size={20} />
-												) : null}
-												{params.InputProps.endAdornment}
-											</Fragment>
-										),
-									}}
-									label='Press enter to search'
-									onKeyDown={handleSearch}
-								/>
-							)}
+							label='Press enter to search'
+							onKeyDown={handleSearch}
 						/>
-
-						<Stack direction='row' justifyContent='flex-start'>
-							<Button
-								variant='contained'
-								onClick={handleAddItem}
-								sx={{ ml: 2 }}
-							>
-								Add Item
-							</Button>
-						</Stack>
-					</Grid>
-					{items.length > 0 ? (
-						<Box sx={{ minWidth: 300, mt: 2 }}>
-							<Paper elevation={12}>
-								<List
-									sx={{
-										width: '100%',
-										maxWidth: 360,
-										bgcolor: 'background.paper',
-										position: 'relative',
-										overflow: 'auto',
-										maxHeight: 400,
-										'& ul': { padding: 0 },
-									}}
-								>
-									{items.map(items =>
-										edit ? (
-											<ListItem
-												key={items.name}
-												secondaryAction={
-													<Button
-														value={items.name}
-														color='error'
-														onClick={() => handleDeleteItem(items.name)}
-														endIcon={<DeleteRoundedIcon />}
-													></Button>
-												}
-											>
-												<ListItemText primary={items.name} />
-											</ListItem>
-										) : (
-											<ListItem key={items.name}>
-												<ListItemText primary={items.name} />
-											</ListItem>
-										)
-									)}
-								</List>
-								<Box display='flex' justifyContent='center'>
-									{edit ? (
-										<Button
-											variant='contained'
-											color='secondary'
-											onClick={handleEdit}
-											fullWidth
-										>
-											Done
-										</Button>
-									) : (
-										<Button variant='contained' onClick={handleEdit} fullWidth>
-											Edit
-										</Button>
-									)}
-								</Box>
-							</Paper>
-						</Box>
-					) : (
-						<Typography variant='h6'>Your Pantry Is Empty</Typography>
 					)}
-				</Stack>
-			</Grid>
-		</Grid>
+				/>
+
+				<Button
+					variant='contained'
+					onClick={handleAddItem}
+					sx={{ mt: 2, maxHeight: 55 }}
+				>
+					Add Item
+				</Button>
+			</Stack>
+			<Stack direction='row' justifyContent={'center'}>
+				{items.length > 0 ? (
+					<Box sx={{ minWidth: 360, mt: 2, maxWidth: 450 }}>
+						<Paper elevation={12}>
+							<List
+								sx={{
+									width: '100%',
+									minWidth: 360,
+									bgcolor: 'background.paper',
+									position: 'flex',
+									overflow: 'auto',
+									maxHeight: 400,
+									'& ul': { padding: 0 },
+								}}
+							>
+								{items.map(items =>
+									edit ? (
+										<ListItem
+											key={items.name}
+											secondaryAction={
+												<Button
+													value={items.name}
+													color='error'
+													onClick={() => handleDeleteItem(items.name)}
+													endIcon={<DeleteRoundedIcon />}
+												></Button>
+											}
+										>
+											<ListItemText primary={items.name} />
+										</ListItem>
+									) : (
+										<ListItem key={items.name}>
+											<ListItemText primary={items.name} />
+										</ListItem>
+									)
+								)}
+							</List>
+							<Box display='flex' justifyContent='center'>
+								{edit ? (
+									<Button
+										variant='contained'
+										color='secondary'
+										onClick={handleEdit}
+										fullWidth
+									>
+										Done
+									</Button>
+								) : (
+									<Button variant='contained' onClick={handleEdit} fullWidth>
+										Edit
+									</Button>
+								)}
+							</Box>
+						</Paper>
+					</Box>
+				) : (
+					<Typography variant='h6'>Your Pantry Is Empty</Typography>
+				)}
+			</Stack>
+		</div>
 	);
 }
