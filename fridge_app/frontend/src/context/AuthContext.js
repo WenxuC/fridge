@@ -23,6 +23,29 @@ export const AuthProvider = ({ children }) => {
 	);
 	const [loading, setLoading] = useState(false);
 
+	const guestUser = async e => {
+		e.preventDefault();
+		const response = await fetch(`${URL}account/token/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				username: 'guest',
+				password: 'guest123',
+			}),
+		});
+		const data = await response.json();
+		if (response.status === 200) {
+			setUser(jwt_decode(data.access));
+			setAuthTokens(data);
+			localStorage.setItem('authTokens', JSON.stringify(data));
+			navigate('/dashboard');
+		} else {
+			alert('Something went wrong!');
+		}
+	};
+
 	const loginUser = async e => {
 		e.preventDefault();
 		const value = JSON.parse(e.target.value);
@@ -39,8 +62,9 @@ export const AuthProvider = ({ children }) => {
 		const data = await response.json();
 		if (response.status === 200) {
 			setUser(jwt_decode(data.access));
-			setAuthTokens(data);
 			localStorage.setItem('authTokens', JSON.stringify(data));
+			setAuthTokens(data);
+
 			navigate('/dashboard');
 		} else {
 			alert('Something went wrong!');
@@ -51,6 +75,7 @@ export const AuthProvider = ({ children }) => {
 		setAuthTokens(null);
 		setUser(null);
 		localStorage.removeItem('authTokens');
+		localStorage.removeItem('ingredients');
 		navigate('/login');
 	};
 
@@ -82,6 +107,7 @@ export const AuthProvider = ({ children }) => {
 		user: user,
 		authTokens: authTokens,
 		loginUser: loginUser,
+		guestUser: guestUser,
 		logoutUser: logoutUser,
 	};
 

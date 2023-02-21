@@ -44,6 +44,9 @@ class GetRecipeView(APIView):
             }
         ).json()
 
+        if len(response) == 0:
+            return Response({'Bad Request': 'No data found'}, status=status.HTTP_400_BAD_REQUEST)
+            
         recipeSample = sample(response, 5)
         recipeDict = []
         id_list = []
@@ -105,7 +108,6 @@ class AdvancedRecipeView(APIView):
         intolerance = ",".join(request.data.get('intolerance'))
         ingredients = request.data.get('ingredients')
         ingredientsSet = set()
-        print(request.data)
         for data in ingredients:
             ingredientsSet.add(data['name'].lower())
         ingredientString = ",".join(ingredientsSet)
@@ -120,7 +122,7 @@ class AdvancedRecipeView(APIView):
                 'type': typeOfFood,
                 'cuisine': cuisine,
                 'diet': diet,
-                'sort': "max-used-ingredients",
+                'sort': "min-missing-ingredients",
                 'intolerance': intolerance,
                 'number': 50,
                 'ignorePantry': True,

@@ -3,6 +3,8 @@ import { config } from './Constants';
 import { cuisine_list, meal, diets, intolerances } from './dictionary/Filter';
 import AuthContext from '../context/AuthContext';
 import Cards from './Cards';
+import Modals from './Modals';
+
 import {
 	Grid,
 	Button,
@@ -18,14 +20,13 @@ import {
 	Alert,
 	Autocomplete,
 	TextField,
-	Box,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const URL = config.url;
 
-export default function Recipe({ setLike }) {
-	const { authTokens } = useContext(AuthContext);
+export default function Recipe({ setLike, setModal, modal }) {
+	const { authTokens, user } = useContext(AuthContext);
 	const [recipes, setRecipes] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [items, setItems] = useState([]);
@@ -51,23 +52,30 @@ export default function Recipe({ setLike }) {
 	};
 
 	useEffect(() => {
-		const getItems = async () => {
-			const response = await fetch(`${URL}items/getItems`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + String(authTokens.access),
-				},
-			});
-			const data = await response.json();
-
-			if (response.status === 200) {
-				setItems(data);
-			} else if (response.status === 400) {
-				alert('Please add at least one item in your pantry.');
+		if (user.username == 'guest') {
+			const storage = JSON.parse(localStorage.getItem('ingredients'));
+			if (storage != null) {
+				setItems(storage['name']);
 			}
-		};
-		getItems();
+		} else {
+			const getItems = async () => {
+				const response = await fetch(`${URL}items/getItems`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + String(authTokens.access),
+					},
+				});
+				const data = await response.json();
+
+				if (response.status === 200) {
+					setItems(data);
+				} else if (response.status === 400) {
+					alert('Please add at least one item in your pantry.');
+				}
+			};
+			getItems();
+		}
 	}, [alerts]);
 
 	const handleSearch = async () => {
@@ -93,7 +101,6 @@ export default function Recipe({ setLike }) {
 			setRecipes(data);
 			setLoading(false);
 		} else {
-			console.log(response.status);
 			setAlerts(true);
 			setLoading(false);
 			setRecipes([]);
@@ -217,12 +224,18 @@ export default function Recipe({ setLike }) {
 						{recipes.map((item, index) => (
 							<Grid item key={index}>
 								<Stack direction={'row'}></Stack>
-								<Cards item={item} index={index} setLike={setLike} />
+								<Cards
+									item={item}
+									index={index}
+									setLike={setLike}
+									setModal={setModal}
+								/>
 							</Grid>
 						))}
 					</Grid>
 				)}
 			</Grid>
+			<Modals modal={modal} setModal={setModal} />
 		</Grid>
 	);
 }

@@ -75,6 +75,7 @@ export default function Dashboard() {
 	const [items, setItems] = useState([]);
 	const [like, setLike] = useState(true);
 	const [value, setValue] = useState(0);
+	const [modal, setModal] = useState(false);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -133,10 +134,10 @@ export default function Dashboard() {
 				</TabPanel>
 
 				<TabPanel value={value} index={2}>
-					<Recipe setLike={setLike} />
+					<Recipe setLike={setLike} setModal={setModal} modal={modal} />
 				</TabPanel>
 				<TabPanel value={value} index={3}>
-					<Search setLike={setLike} />
+					<Search setLike={setLike} setModal={setModal} modal={modal} />
 				</TabPanel>
 			</Box>
 		</div>
