@@ -18,7 +18,9 @@ export default function Recipe({ setLike, setModal, modal }) {
 	useEffect(() => {
 		if (user.username == 'guest') {
 			const storage = JSON.parse(localStorage.getItem('ingredients'));
-			setItems(storage['name']);
+			if (storage != null) {
+				setItems(storage['name']);
+			}
 		} else {
 			const getItems = async () => {
 				const response = await fetch(`${URL}items/getItems`, {

@@ -122,7 +122,7 @@ class AdvancedRecipeView(APIView):
                 'type': typeOfFood,
                 'cuisine': cuisine,
                 'diet': diet,
-                'sort': "max-used-ingredients",
+                'sort': "min-missing-ingredients",
                 'intolerance': intolerance,
                 'number': 50,
                 'ignorePantry': True,

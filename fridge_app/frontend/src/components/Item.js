@@ -340,7 +340,9 @@ export default function Items() {
 						</Paper>
 					</Box>
 				) : (
-					<Typography variant='h6'>Your Pantry Is Empty</Typography>
+					<Typography variant='h6' sx={{ mt: 2 }}>
+						Your Pantry Is Empty
+					</Typography>
 				)}
 			</Stack>
 		</div>
