@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import AuthContext from '../context/AuthContext';
 // MUI
 import {
 	Typography,
@@ -58,7 +59,7 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 export default function Home() {
 	const navigate = useNavigate();
-
+	const { guestUser } = useContext(AuthContext);
 	useEffect(() => {
 		const token = localStorage.getItem('authTokens');
 
@@ -178,7 +179,7 @@ export default function Home() {
 						color='primary'
 						variant='contained'
 						size='large'
-						href='/register'
+						onClick={guestUser}
 						sx={{ minWidth: 200 }}
 					>
 						Try It Out
