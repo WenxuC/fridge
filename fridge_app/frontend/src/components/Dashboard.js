@@ -1,15 +1,14 @@
 import React, { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
 
-// import '../App.css';
-import Header from './Header';
-import { Typography, Box, Tab, Tabs, Container, styled } from '@mui/material';
 import AuthContext from '../context/AuthContext';
+import Header from './Header';
 import Items from './Item';
 import Recipe from './Recipe';
 import History from './History';
 import Search from './Search';
 
+import PropTypes from 'prop-types';
+import { Typography, Box, Tab, Tabs, Container, styled } from '@mui/material';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -97,12 +96,7 @@ export default function Dashboard() {
 			</Container>
 			<Box sx={{ width: '100%' }}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-					<AntTabs
-						value={value}
-						onChange={handleChange}
-						aria-label='basic tabs example'
-						centered
-					>
+					<AntTabs value={value} onChange={handleChange} centered>
 						<AntTab
 							icon={<HistoryRoundedIcon />}
 							label='History'
