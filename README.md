@@ -7,6 +7,8 @@ This project utilizes React, JavaScript and Material-UI for the frontend and UI 
 
 It is deployed on AWS EC2 using Nginx and Gunicorn 
 
+![mise-en-place](https://user-images.githubusercontent.com/61256722/221073819-e3403eaa-66cc-4ec1-b641-615d64dbb549.gif)
+
 
 # Deployed Website
 [AWS Website](http://miseenplace.art/)
