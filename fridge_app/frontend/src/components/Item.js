@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { config } from './Constants';
 import AuthContext from '../context/AuthContext';
+import Alerts from './Alerts';
+
 import {
-	Grid,
 	TextField,
 	Button,
 	Stack,
@@ -82,12 +83,6 @@ export default function Items() {
 			setUpdateList(false);
 		}
 	}, [updateList]);
-
-	const handleClose = () => {
-		setOpen(false);
-		setName('');
-		setAlert('');
-	};
 
 	function handleDeleteItem(ingredient) {
 		if (user.username == 'guest') {
@@ -193,6 +188,7 @@ export default function Items() {
 			if (response.status === 200) {
 				setResults(data);
 			} else if (response.status === 400) {
+				setOpen(true);
 				setAlert('No search results');
 			}
 		}
@@ -207,24 +203,7 @@ export default function Items() {
 	};
 	return (
 		<div>
-			<Stack direction='row' justifyContent={'center'}>
-				{open !== '' ? (
-					<Snackbar
-						open={open}
-						autoHideDuration={5000}
-						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-						onClose={handleClose}
-					>
-						<Alert
-							sx={{ minWidth: 370, maxWidth: 360 }}
-							severity='error'
-							onClose={handleClose}
-						>
-							{alert}
-						</Alert>
-					</Snackbar>
-				) : null}
-			</Stack>
+			<Alerts setOpen={setOpen} open={open} alert={alert} />
 			<Stack direction='row' justifyContent={'center'}>
 				<Autocomplete
 					onChange={(event, newValue) => {
