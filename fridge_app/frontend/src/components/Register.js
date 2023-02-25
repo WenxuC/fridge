@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { config } from './Constants';
+
+import Alerts from './Alerts';
+
 import {
 	Button,
 	Grid,
@@ -27,6 +30,8 @@ export default function Register() {
 	const [passwordConfirm, getPasswordConfirm] = useState('');
 	const [email, getEmail] = useState('');
 	const [error, getError] = useState('');
+	const [alert, setAlert] = useState('');
+	const [open, setOpen] = useState(false);
 	const handleSubmit = () => {
 		if (password !== passwordConfirm) {
 			getError('Password does not match.');
@@ -42,7 +47,8 @@ export default function Register() {
 				.post(`${URL}account/register`, body)
 				.catch(function (error) {
 					if (error.response.status === 400) {
-						return getError('User or email already exists. Please try again.');
+						setAlert('Username or Email already exists. Please try again.');
+						setOpen(true);
 					}
 				})
 				.then(response => {
@@ -56,6 +62,7 @@ export default function Register() {
 
 	return (
 		<ThemeProvider theme={theme}>
+			<Alerts setOpen={setOpen} open={open} alert={alert} />
 			<Grid container component='main' sx={{ height: '100vh' }}>
 				<CssBaseline />
 				<Grid

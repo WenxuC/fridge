@@ -11,6 +11,8 @@ export default AuthContext;
 // Provider
 export const AuthProvider = ({ children }) => {
 	const navigate = useNavigate();
+	const [open, setOpen] = useState(false);
+	const [alert, setAlert] = useState('');
 	const [user, setUser] = useState(() =>
 		localStorage.getItem('authTokens')
 			? jwt_decode(localStorage.getItem('authTokens'))
@@ -42,7 +44,8 @@ export const AuthProvider = ({ children }) => {
 			localStorage.setItem('authTokens', JSON.stringify(data));
 			navigate('/dashboard');
 		} else {
-			alert('Something went wrong!');
+			setAlert('Wrong Username or Password. Please try again.');
+			setOpen(true);
 		}
 	};
 
@@ -67,7 +70,8 @@ export const AuthProvider = ({ children }) => {
 
 			navigate('/dashboard');
 		} else {
-			alert('Something went wrong!');
+			setAlert('Wrong Username or Password. Please try again.');
+			setOpen(true);
 		}
 	};
 
@@ -109,6 +113,9 @@ export const AuthProvider = ({ children }) => {
 		loginUser: loginUser,
 		guestUser: guestUser,
 		logoutUser: logoutUser,
+		setOpen: setOpen,
+		open: open,
+		alert: alert,
 	};
 
 	useEffect(() => {

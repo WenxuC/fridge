@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack, Snackbar, Alert } from '@mui/material';
+import { Stack, Snackbar, Alert, Typography } from '@mui/material';
 
 function Alerts({ setOpen, open, alert }) {
 	const handleClose = () => {
@@ -9,7 +9,6 @@ function Alerts({ setOpen, open, alert }) {
 
 	return (
 		<Stack direction='row' justifyContent={'center'}>
-			{console.log(alert, open)}
 			{open !== '' ? (
 				<Snackbar
 					open={open}
@@ -22,7 +21,7 @@ function Alerts({ setOpen, open, alert }) {
 						severity='error'
 						onClose={handleClose}
 					>
-						{alert}
+						<Typography textAlign={'center'}>{alert}</Typography>
 					</Alert>
 				</Snackbar>
 			) : null}

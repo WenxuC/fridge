@@ -1,4 +1,8 @@
 import React, { useState, useContext } from 'react';
+
+import AuthContext from '../context/AuthContext';
+import Alerts from './Alerts';
+
 import {
 	Button,
 	Grid,
@@ -12,17 +16,17 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AuthContext from '../context/AuthContext';
 
 const theme = createTheme();
 
 export default function Login() {
-	const { loginUser } = useContext(AuthContext);
+	const { loginUser, open, setOpen, alert } = useContext(AuthContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
 	return (
 		<ThemeProvider theme={theme}>
+			<Alerts setOpen={setOpen} open={open} alert={alert} />
 			<Grid container component='main' sx={{ height: '100vh' }}>
 				<CssBaseline />
 				<Grid
