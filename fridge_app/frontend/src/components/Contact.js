@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import Header from './Header';
+import Alerts from './Alerts';
 import {
 	Grid,
 	Typography,
@@ -16,19 +18,23 @@ function Contact() {
 	const [email, setEmail] = useState('');
 	const [subject, setSubject] = useState('');
 	const [description, setDescription] = useState('');
+	const [open, setOpen] = useState(false);
+	const [alert, setAlert] = useState('');
 
 	const handleSubmit = () => {
 		// Send info to the backend
 		if (name && email && subject && description) {
 			setSubmit(true);
 		} else {
-			alert('Please fill out all appropriate fields');
+			setAlert('Please fill out all appropriate fields');
+			setOpen(true);
 		}
 	};
 
 	return (
 		<div>
 			<Header />
+			<Alerts setOpen={setOpen} open={open} alert={alert} />
 			<Container component='main' maxWidth='md' sx={{ mb: 4 }}>
 				<Paper
 					elevation={24}
