@@ -6,7 +6,7 @@ import { Grid, Stack } from '@mui/material';
 
 const URL = config.url;
 
-export default function History({ like, setLike }) {
+export default function History({ setLike }) {
 	const { authTokens, logoutUser, user } = useContext(AuthContext);
 	const [history, setHistory] = useState([]);
 	const [updateList, setUpdateList] = useState([false]);
